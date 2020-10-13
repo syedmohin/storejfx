@@ -188,13 +188,8 @@ public class WelcomeController implements Initializable {
         time.setOnMouseClicked(e -> {
             try {
                 AudioClip rn = new AudioClip(surah.getURI().toString());
-                if (rn.isPlaying()) {
-                    rn.stop();
-                    rn.play();
-                } else {
-                    rn.stop();
-                    rn.play();
-                }
+                rn.stop();
+                rn.play();
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
