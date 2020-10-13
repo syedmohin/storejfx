@@ -41,6 +41,8 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.web.WebView;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -188,6 +190,7 @@ public class WelcomeController implements Initializable {
         time.setOnMouseClicked(e -> {
             try {
                 AudioClip rn = new AudioClip(surah.getURI().toString());
+                rn.setVolume(100);
                 rn.stop();
                 rn.play();
             } catch (Exception e1) {
