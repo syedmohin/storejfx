@@ -4,7 +4,6 @@ import com.sunday.model.Customer;
 import com.sunday.model.CustomerModifiedAmount;
 import com.sunday.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -13,19 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
+
 @Service
 @RequiredArgsConstructor
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
-
-    @Transactional
-    public int getTotalBalance() {
-        return getAllData()
-                .stream()
-                .mapToInt(Customer::getBalance)
-                .sum();
-    }
 
     @Transactional
     public List<Customer> getAllData() {
@@ -40,19 +33,21 @@ public class CustomerService {
         return getAllData()
                 .stream()
                 .map(Customer::getCustomerName)
-                .collect(Collectors.toList());
-//        return list.toArray(new String[list.size()]);
+                .distinct()
+                .collect(toList());
     }
 
     @Transactional
     public Customer insert(Customer customer, CustomerModifiedAmount cma) {
         if (customer.getBalance() == 0)
             customer.setComplete(true);
+        customer.setReturnedCrate(0);
         customer.setCustomerId(getLastCustomerId());
         customer.getCustomerModifiedAmount().add(cma);
         return customerRepository.save(customer);
     }
 
+    @Transactional
     public Customer findByCustomerId(String cusId) throws Exception {
         var customer = customerRepository.findByCustomerId(cusId);
         return customer.orElseThrow(() -> new Exception("No record found!!!"));

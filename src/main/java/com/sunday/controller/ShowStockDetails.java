@@ -84,7 +84,7 @@ public class ShowStockDetails implements Initializable {
         stockTable.getColumns().addAll(paid, date);
         stockTable.setItems(ob);
         print.setOnAction(e->{
-            String customerData = printerService.printStock(stock);
+            String stockData = printerService.printStock(stock);
             var job = PrinterJob.createPrinterJob();
             var p = Printer.getAllPrinters();
             Printer selectedPrinter = null;
@@ -97,13 +97,8 @@ public class ShowStockDetails implements Initializable {
             }
             job.setPrinter(selectedPrinter);
             var wv = new WebView();
-            wv.setPrefWidth(1920);
-            wv.minWidth(1920);
-            wv.setPrefHeight(1080);
-            wv.setPrefHeight(1080);
-            wv.setFontScale(1.25);
             var we = wv.getEngine();
-            we.loadContent(customerData,"text/html");
+            we.loadContent(stockData);
             we.print(job);
             job.endJob();
         });

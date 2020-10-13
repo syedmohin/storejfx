@@ -6,6 +6,8 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -97,7 +99,7 @@
                   <Font name="System Bold" size="12.0" />
                </font>
                 </Button>
-            <Label fx:id="time" layoutX="1400.0" layoutY="9.0" prefHeight="25.0" prefWidth="104.0" textFill="#00a6ff">
+            <Label fx:id="time" layoutX="306.0" layoutY="9.0" prefHeight="25.0" prefWidth="1198.0" textFill="#00a6ff" wrapText="true">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
@@ -129,9 +131,9 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Button>
-            <Label layoutX="14.0" layoutY="14.0" prefHeight="27.0" prefWidth="195.0" text="Store Application" textFill="#004fff">
+            <Label layoutX="14.0" layoutY="14.0" prefHeight="50.0" prefWidth="195.0" text="AFC Friut Store" textFill="WHITE">
                <font>
-                  <Font name="System Bold" size="18.0" />
+                  <Font name="Showcard Gothic" size="22.0" />
                </font>
             </Label>
             <Label layoutX="14.0" layoutY="910.0" text="Made By" textFill="WHITE">
@@ -159,6 +161,11 @@
                   <Font size="18.0" />
                </font>
             </Text>
+            <ImageView fitHeight="205.0" fitWidth="319.0" layoutX="7.0" layoutY="64.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@image/allah.png" />
+               </image>
+            </ImageView>
             </children>
         </AnchorPane>
         <AnchorPane fx:id="customer" layoutX="227.0" layoutY="42.0" prefHeight="962.0" prefWidth="1526.0" style="-fx-background-color: #000000;">
@@ -231,16 +238,6 @@
                             </font>
                         </Label>
                         <Label fx:id="totalAmountCustomer" layoutX="1232.0" layoutY="65.0" textFill="WHITE">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Label>
-                        <Label layoutX="942.0" layoutY="264.0" prefHeight="27.0" prefWidth="120.0" text="Total Balance" textFill="WHITE">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Label>
-                        <Label fx:id="totalBalance" layoutX="1072.0" layoutY="265.0" textFill="WHITE">
                             <font>
                                 <Font size="18.0" />
                             </font>

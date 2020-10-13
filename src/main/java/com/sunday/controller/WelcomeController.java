@@ -8,13 +8,12 @@ import com.sunday.model.Customer;
 import com.sunday.model.CustomerModifiedAmount;
 import com.sunday.model.Stock;
 import com.sunday.model.StockModifiedAmount;
+import com.sunday.repository.PrinterRepository;
 import com.sunday.service.CustomerService;
 import com.sunday.service.ExcelFileService;
+import com.sunday.service.PrinterService;
 import com.sunday.service.StockService;
 import com.sunday.stage.StageListener;
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
@@ -29,23 +28,28 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.print.PageOrientation;
+import javafx.print.Paper;
+import javafx.print.Printer;
+import javafx.print.PrinterJob;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.media.AudioClip;
+import javafx.scene.web.WebView;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
-import javafx.util.Duration;
 import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import lombok.RequiredArgsConstructor;
 import org.controlsfx.control.textfield.TextFields;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -56,8 +60,7 @@ import javax.print.PrintServiceLookup;
 import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -67,10 +70,13 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class WelcomeController implements Initializable {
 
+    @Value("classpath:/001.mp3")
+    private Resource surah;
     private final ApplicationContext applicationContext;
     private final CustomerService customerService;
     private final StockService stockService;
     private final ExcelFileService excelFileService;
+    private final PrinterRepository printerRepository;
 
     final DirectoryChooser directoryChooser = new DirectoryChooser();
 
@@ -111,6 +117,7 @@ public class WelcomeController implements Initializable {
     private TextField paidAmountCustomer;
     @FXML
     private TextField crateCustomer;
+    private final PrinterService printerService;
 
     @FXML
     private TextField paidStock;
@@ -131,8 +138,6 @@ public class WelcomeController implements Initializable {
     private Button minus;
     @FXML
     private AnchorPane main;
-    @FXML
-    private Label totalBalance;
 
     @FXML
     private AnchorPane stockText;
@@ -152,6 +157,7 @@ public class WelcomeController implements Initializable {
     @FXML
     private Button unpaid;
 
+
     ObservableList<StockObservable> obStock = FXCollections.observableArrayList();
     ObservableList<CustomerObservable> ob = FXCollections.observableArrayList();
 
@@ -160,14 +166,9 @@ public class WelcomeController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        var balanceToolTip = new Tooltip();
-        balanceToolTip.setText("Click to Refresh the amount");
-        totalBalance.setTooltip(balanceToolTip);
-        totalBalance.setOnMouseClicked(e -> totalBalance.setText(customerService.getTotalBalance() + ""));
         textBinding();
         moveable();
         setTime();
-        totalBalance.setText(customerService.getTotalBalance() + "");
         unpaid.setOnAction(e -> {
             directoryChooser.setTitle("Select the Folder");
             var f = new File(System.getProperty("user.home") + "/Documents/Store/Customer");
@@ -183,7 +184,14 @@ public class WelcomeController implements Initializable {
         createCustomerTable();
         createStockTable();
         bindingFields();
-
+        time.setOnMouseClicked(e -> {
+            try {
+                AudioClip rn = new AudioClip(surah.getURI().toString());
+                rn.play();
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+        });
         exit.setOnAction(e -> {
             new FadeInDown(main).play();
             Platform.exit();
@@ -195,7 +203,6 @@ public class WelcomeController implements Initializable {
         submitCustomer.setOnAction(ae -> {
             try {
                 checkingFieldsOfCustomers();
-                clearCustomerField();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -274,16 +281,7 @@ public class WelcomeController implements Initializable {
 
 
     private void setTime() {
-        Timeline clock = new Timeline(new KeyFrame(Duration.ZERO, e -> {
-            LocalTime currentTime = LocalTime.now();
-            var df = DateTimeFormatter.ofPattern("hh:mm:ss a");
-            var dat = currentTime.format(df);
-            time.setText(dat.toUpperCase());
-        }),
-                new KeyFrame(Duration.seconds(1))
-        );
-        clock.setCycleCount(Animation.INDEFINITE);
-        clock.play();
+        time.setText("بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِیْمَِلْحَمْدُ لِلّٰهِ رَبِّ الْعٰلَمِیْنَۙالرَّحْمٰنِ الرَّحِیْمِۙمٰلِكِ یَوْمِ الدِّیْنِؕاِیَّاكَ نَعْبُدُ وَ اِیَّاكَ نَسْتَعِیْنُؕاِهْدِنَا الصِّرَاطَ الْمُسْتَقِیْمَۙصِرَاطَ الَّذِیْنَ اَنْعَمْتَ عَلَیْهِمْ ﴰ غَیْرِ الْمَغْضُوْبِ عَلَیْهِمْ وَ لَا الضَّآلِّیْنَ۠");
     }
 
     private void bindingFields() {
@@ -386,6 +384,8 @@ public class WelcomeController implements Initializable {
             stock.getStockModifiedAmount().add(sma);
             var st = stockService.insertData(stock);
             stockTable.getItems().add(new StockObservable(st.getStockId(), st.getVehicleNo(), st.getWeight(), st.getRate(), st.getTotalAmount(), st.getBalance(), st.getDate()));
+            filterTable();
+            clearStockField();
         } else {
             System.out.println("Fill the fields");
         }
@@ -393,6 +393,7 @@ public class WelcomeController implements Initializable {
 
     private void checkingFieldsOfCustomers() {
         var total = 0;
+        var paid = 0;
         var customer = new Customer();
         var cma = new CustomerModifiedAmount();
         var valid = false;
@@ -448,6 +449,7 @@ public class WelcomeController implements Initializable {
         } else {
             try {
                 var p = Integer.parseInt(paidAmountCustomer.getText().trim());
+                paid = p;
                 if (p == 0) {
                     customer.setBalance(total);
                 }
@@ -469,14 +471,57 @@ public class WelcomeController implements Initializable {
             }
         }
         if (valid) {
-            var c = customerService.insert(customer, cma);
-            ob.add(new CustomerObservable(c.getCustomerId(), c.getCustomerName(), c.getWeight(), c.getRate(), c.getCrate(), c.getReturnedCrate(), c.getTotalAmount(), c.getBalance(), c.getDate()));
-            customerTable.setItems(ob);
-            filterTable();
+            if (paid > total) {
+                Alert alert = new Alert(AlertType.WARNING);
+                alert.setTitle("Infomation");
+                alert.setContentText("You have entered Paid Amount more than Total Amount");
+                alert.showAndWait();
+                paidAmountCustomer.setFocusTraversable(true);
+            } else {
+                var c = customerService.insert(customer, cma);
+                ob.add(new CustomerObservable(c.getCustomerId(), c.getCustomerName(), c.getWeight(), c.getRate(), c.getCrate(), c.getReturnedCrate(), c.getTotalAmount(), c.getBalance(), c.getDate()));
+                customerTable.setItems(ob);
+                printCustomer(c);
+                filterTable();
+                clearCustomerField();
+            }
         } else {
             alertMe("Fill in the details");
         }
     }
+
+    private void printCustomer(Customer c) {
+        String customerData = null;
+        if (c != null) {
+            customerData = printerService.printCustomer(c);
+        }
+        var job = PrinterJob.createPrinterJob();
+        var p = Printer.getAllPrinters();
+        Printer selectedPrinter = null;
+        var a4 = Paper.A4;
+        for (Printer pt : p) {
+            if (pt.getName().equals(getPrinterFromDB())) {
+                selectedPrinter = pt;
+                selectedPrinter.createPageLayout(a4, PageOrientation.PORTRAIT, 0.039f, 0.039f, 0.039f, 0.039f);
+            }
+        }
+        job.setPrinter(selectedPrinter);
+        var wv = new WebView();
+        wv.setPrefSize(300, 300);
+        wv.setMaxSize(300, 300);
+        var we = wv.getEngine();
+        we.loadContent(customerData);
+        we.print(job);
+        job.endJob();
+    }
+
+    private String getPrinterFromDB() {
+        var list = new ArrayList<com.sunday.model.Printer>();
+        var it = printerRepository.findAll();
+        it.forEach(list::add);
+        return list.get(0).getPrinterName();
+    }
+
 
     private void createStockTable() {
         var stock = stockService.getAllData();
@@ -680,7 +725,6 @@ public class WelcomeController implements Initializable {
     }
 
     private void createCustomerTable() {
-
         var cust = customerService.getAllData();
         customerTable.setEditable(true);
         var custNo = new TableColumn<CustomerObservable, String>("#");
@@ -731,11 +775,14 @@ public class WelcomeController implements Initializable {
         returnedCrate.setCellValueFactory(p -> p.getValue().returedCrate.asObject());
         returnedCrate.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
         returnedCrate.setOnEditCommit(e -> {
-            var custId = e.getTableView().getItems().get(e.getTablePosition().getRow()).custNo.get();
-            var cu = customerService.updateReturnCrate(custId, e.getNewValue());
-            System.out.println(cu.getCrate());
-            System.out.println(cu.getReturnedCrate());
-            e.getTableView().getItems().get(e.getTablePosition().getRow()).returedCrate.set(cu.getCrate() - cu.getReturnedCrate());
+            try {
+                var custId = e.getTableView().getItems().get(e.getTablePosition().getRow()).custNo.get();
+                var c = customerService.updateReturnCrate(custId, e.getNewValue());
+                var show = c.getCrate() - c.getReturnedCrate();
+                e.getTableView().getItems().get(e.getTablePosition().getRow()).returedCrate.set(show);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
         });
 
         var totalAmount = new TableColumn<CustomerObservable, Integer>("Total Amount");
@@ -753,9 +800,7 @@ public class WelcomeController implements Initializable {
         var date = new TableColumn<CustomerObservable, String>("Date ");
         date.setCellValueFactory(p -> p.getValue().date);
 
-        cust.forEach(
-                c -> ob.add(new CustomerObservable(c.getCustomerId(), c.getCustomerName(), c.getWeight(), c.getRate(), c.getRate(), c.getReturnedCrate(), c.getTotalAmount(), c.getBalance(), c.getDate()))
-        );
+        cust.forEach(c -> ob.add(new CustomerObservable(c.getCustomerId(), c.getCustomerName(), c.getWeight(), c.getRate(), c.getCrate(), c.getReturnedCrate(), c.getTotalAmount(), c.getBalance(), c.getDate())));
         customerTable.setItems(ob);
         customerTable.getColumns().addAll(custNo, customerName, weight, rate, crate, returnedCrate, totalAmount, balance, date);
         customerTable.setItems(ob);

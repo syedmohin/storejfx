@@ -1,5 +1,7 @@
 package com.sunday.controller;
 
+import com.sun.javafx.print.PrintHelper;
+import com.sun.javafx.print.Units;
 import com.sunday.model.Customer;
 import com.sunday.model.CustomerModifiedAmount;
 import com.sunday.repository.PrinterRepository;
@@ -16,6 +18,7 @@ import javafx.print.PageOrientation;
 import javafx.print.Paper;
 import javafx.print.Printer;
 import javafx.print.PrinterJob;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -23,7 +26,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
@@ -109,17 +111,15 @@ public class ShowCustomerDetails implements Initializable {
             var job = PrinterJob.createPrinterJob();
             var p = Printer.getAllPrinters();
             Printer selectedPrinter = null;
-            var a4 = Paper.A4;
+            Paper paper = PrintHelper.createPaper("Roll80",80 , 1000, Units.MM);
             for (Printer pt : p) {
                 if (pt.getName().equals(getPrinterFromDB())) {
                     selectedPrinter = pt;
-                    selectedPrinter.createPageLayout(a4, PageOrientation.PORTRAIT, Printer.MarginType.HARDWARE_MINIMUM);
+                    selectedPrinter.createPageLayout(paper, PageOrientation.PORTRAIT, 0.0f, 0.0f, 0.0f, 0.0f);
                 }
             }
             job.setPrinter(selectedPrinter);
             var wv = new WebView();
-            wv.setMaxWidth(1000);
-            wv.setPrefWidth(1000);
             var we = wv.getEngine();
             we.loadContent(customerData);
             we.print(job);
