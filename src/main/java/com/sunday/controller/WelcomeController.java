@@ -163,6 +163,7 @@ public class WelcomeController implements Initializable {
 
     private double xOffSet = 0;
     private double yOffSet = 0;
+    private boolean play = true;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -187,7 +188,13 @@ public class WelcomeController implements Initializable {
         time.setOnMouseClicked(e -> {
             try {
                 AudioClip rn = new AudioClip(surah.getURI().toString());
-                rn.play();
+                if (rn.isPlaying()) {
+                    rn.stop();
+                    rn.play();
+                } else {
+                    rn.stop();
+                    rn.play();
+                }
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
