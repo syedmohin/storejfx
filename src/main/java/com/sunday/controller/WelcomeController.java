@@ -725,12 +725,12 @@ public class WelcomeController implements Initializable {
         if (actionEvent.getSource() == stockBtn) {
             stock.setVisible(true);
             customer.setVisible(false);
-            new BounceIn(stockText).play();
+            new BounceIn(stockText).setSpeed(.4).play();
             new FadeIn(stock).play();
         } else {
             stock.setVisible(false);
             customer.setVisible(true);
-            new BounceIn(customerFields).play();
+            new BounceIn(customerFields).setSpeed(.4).play();
             new FadeIn(customer).play();
         }
     }
@@ -741,12 +741,12 @@ public class WelcomeController implements Initializable {
             yOffSet = e.getSceneY();
         });
         main.setOnMouseDragged(e -> {
-            StageListener.s.setX(e.getScreenX() - xOffSet);
-            StageListener.s.setY(e.getScreenY() - yOffSet);
-            StageListener.s.setOpacity(0.8);
+            MainController.s.setX(e.getScreenX() - xOffSet);
+            MainController.s.setY(e.getScreenY() - yOffSet);
+            MainController.s.setOpacity(0.8);
         });
-        main.setOnMouseDragOver(e -> StageListener.s.setOpacity(1));
-        main.setOnMouseReleased(e -> StageListener.s.setOpacity(1));
+        main.setOnMouseDragOver(e -> MainController.s.setOpacity(1));
+        main.setOnMouseReleased(e -> MainController.s.setOpacity(1));
     }
 
     private void createCustomerTable() {

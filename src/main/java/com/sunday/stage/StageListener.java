@@ -1,6 +1,7 @@
 package com.sunday.stage;
 
 import animatefx.animation.BounceIn;
+import com.sun.javafx.sg.prism.NGImageView;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -24,13 +25,11 @@ public class StageListener implements ApplicationListener<StageReadyEvent> {
 
     @Value("${store.title}")
     private String applicationTitle;
-    @Value("classpath:/welcome.fxml")
+    @Value("classpath:/main.fxml")
     private Resource fxml;
     @Value("classpath:/image/icon.png")
     private Resource icon;
     public static Stage s;
-    @Value("classpath:/ring.mp3")
-    private Resource ring;
 
     @Override
     public void onApplicationEvent(StageReadyEvent stageReadyEvent) {
@@ -43,17 +42,10 @@ public class StageListener implements ApplicationListener<StageReadyEvent> {
             Scene scene = new Scene(root);
             stage.setTitle(applicationTitle);
             s = stage;
+            stage.centerOnScreen();
             stage.setResizable(false);
-            Platform.runLater(() -> {
-                try {
-                    AudioClip rn = new AudioClip(ring.getURI().toString());
-                    rn.play();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
             stage.getIcons().add(new Image(icon.getInputStream()));
-            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initStyle(StageStyle.UNDECORATED);
             stage.setScene(scene);
             stage.show();
             new BounceIn(root).play();

@@ -25,22 +25,27 @@
     -fx-border-color: #ffffff;
     -fx-text-fill: #00796b;
 }
-.table-row-cell:selected{
+
+.table-row-cell:selected {
     -fx-text-fill: #00796b;
 }
-.table-view :odd{
+
+.table-view :odd {
     -fx-background-color: white;
 }
-.table-view :odd{
+
+.table-view :odd {
     -fx-background-color: #eeeeee;
 }
 
-.table-row-cell :odd{
+.table-row-cell :odd {
     -fx-background-color: white;
 }
-.table-row-cell :odd{
+
+.table-row-cell :odd {
     -fx-background-color: #eeeeee;
 }
+
 .table-row-cell :selected .table-cell {
     -fx-background-color: #304ffe;
     -fx-text-background-color: #00796b;
@@ -148,4 +153,12 @@
     -fx-background-color: white;
     -fx-text-fill: black;
     -fx-font-weight: bold;
+}
+
+#login {
+    -fx-background-color: white;
+}
+
+#main {
+    -fx-background-color: transparent;
 }
