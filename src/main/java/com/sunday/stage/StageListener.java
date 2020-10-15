@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.RequiredArgsConstructor;
@@ -42,13 +43,14 @@ public class StageListener implements ApplicationListener<StageReadyEvent> {
             Scene scene = new Scene(root);
             stage.setTitle(applicationTitle);
             s = stage;
+            scene.setFill(Color.TRANSPARENT);
             stage.centerOnScreen();
             stage.setResizable(false);
             stage.getIcons().add(new Image(icon.getInputStream()));
-            stage.initStyle(StageStyle.UNDECORATED);
+            stage.initStyle(StageStyle.TRANSPARENT);
             stage.setScene(scene);
             stage.show();
-            new BounceIn(root).play();
+            new BounceIn(root).setSpeed(0.4).play();
         } catch (Exception e) {
             e.printStackTrace();
         }

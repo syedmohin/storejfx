@@ -12,10 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.AudioClip;
@@ -76,12 +73,15 @@ public class MainController implements Initializable {
     private Button loginShow;
     @FXML
     private Button signShow;
+    @FXML
+    private Label title;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         movable();
         userService.allData();
-        main.setStyle("-fx-background-color: transparent;");
+        main.setOpacity(0);
+        title.setOpacity(1);
         loginPane.setVisible(true);
         signUpPane.setVisible(false);
         exit.setOnAction(e -> Platform.exit());
@@ -127,12 +127,6 @@ public class MainController implements Initializable {
                         var fxmlLoader = new FXMLLoader(fxml.getURL());
                         fxmlLoader.setControllerFactory(applicationContext::getBean);
                         Parent root = fxmlLoader.load();
-                        var scene = new Scene(root);
-                        stage.setTitle(applicationTitle);
-                        stage.centerOnScreen();
-                        stage.initStyle(StageStyle.UNDECORATED);
-                        stage.setResizable(false);
-                        stage.getIcons().add(new Image(icon.getInputStream()));
                         Platform.runLater(() -> {
                             try {
                                 AudioClip rn = new AudioClip(ring.getURI().toString());
@@ -141,6 +135,12 @@ public class MainController implements Initializable {
                                 ae.printStackTrace();
                             }
                         });
+                        var scene = new Scene(root);
+                        stage.setTitle(applicationTitle);
+                        stage.centerOnScreen();
+                        stage.initStyle(StageStyle.UNDECORATED);
+                        stage.setResizable(false);
+                        stage.getIcons().add(new Image(icon.getInputStream()));
                         stage.setScene(scene);
                         s = stage;
                         stage.show();

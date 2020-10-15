@@ -256,7 +256,7 @@ public class WelcomeController implements Initializable {
                 stage.getIcons().add(new Image("image/icon.png"));
                 stage.setScene(scene);
                 stage.show();
-                new BounceIn(load).play();
+                new BounceIn(load).setSpeed(.8).play();
             } catch (Exception x) {
                 x.printStackTrace();
             }
@@ -323,6 +323,11 @@ public class WelcomeController implements Initializable {
         alert.setHeaderText("Form Validation");
         alert.setContentText(msg);
         alert.setResizable(false);
+        alert.initOwner(MainController.s);
+        var boxBlur = new BoxBlur(4, 4, 3);
+        alert.setOnShowing(e -> main.setEffect(boxBlur));
+        alert.setOnCloseRequest(e -> main.setEffect(null));
+        alert.showAndWait();
         alert.showAndWait();
     }
 
@@ -331,19 +336,22 @@ public class WelcomeController implements Initializable {
         alert.setHeaderText(header);
         alert.setContentText(msg);
         alert.setResizable(false);
+        alert.initOwner(MainController.s);
+        var boxBlur = new BoxBlur(4, 4, 3);
+        alert.setOnShowing(e -> main.setEffect(boxBlur));
+        alert.setOnCloseRequest(e -> main.setEffect(null));
+        alert.showAndWait();
         alert.showAndWait();
     }
 
     private void checkingFieldsOfStock() {
         var total = 0;
-        var valid = false;
         var stock = new Stock();
         var sma = new StockModifiedAmount();
         if (vehicleNoStock.getText().trim().isEmpty()) {
             alertMe("You need to fill the Vehicle Number ");
         } else {
             stock.setVehicleNo(vehicleNoStock.getText().toUpperCase().trim());
-            valid = true;
         }
         if (weightTonsStock.getText().trim().isEmpty()) {
             alertMe("You need to fill the weight field");
@@ -393,14 +401,14 @@ public class WelcomeController implements Initializable {
                 alertMe("Amount must be Number Only");
             }
         }
-        if (valid) {
+        if (stock.getWeight() != 0 | stock.getTotalAmount() != 0 | stock.getRate() != 0 | !stock.getVehicleNo().isEmpty() | stock.getVehicleNo() != null) {
             stock.getStockModifiedAmount().add(sma);
             var st = stockService.insertData(stock);
             stockTable.getItems().add(new StockObservable(st.getStockId(), st.getVehicleNo(), st.getWeight(), st.getRate(), st.getTotalAmount(), st.getBalance(), st.getDate()));
             filterTable();
             clearStockField();
         } else {
-            System.out.println("Fill the fields");
+            alertMe("Fill All Fields");
         }
     }
 
@@ -474,13 +482,12 @@ public class WelcomeController implements Initializable {
         }
         if (customer.getCrate() != 0 | customer.getWeight() != 0 | customer.getTotalAmount() != 0 | customer.getCustomerName() != null | customer.getRate() != 0) {
             if (paid > total) {
-                var boxBlur = new BoxBlur(4, 4, 3);
                 var alert = new Alert(AlertType.WARNING);
-                alert.setDialogPane(getDialogPane());
                 alert.setTitle("Information");
                 alert.setContentText("You have entered Paid Amount more than Total Amount");
-                alert.initStyle(StageStyle.UNDECORATED);
                 alert.setGraphic(new ImageView(new Image("image/error.png")));
+                alert.initOwner(MainController.s);
+                var boxBlur = new BoxBlur(4, 4, 3);
                 alert.setOnShowing(e -> main.setEffect(boxBlur));
                 alert.setOnCloseRequest(e -> main.setEffect(null));
                 alert.showAndWait();
@@ -635,7 +642,7 @@ public class WelcomeController implements Initializable {
                                 stage.setResizable(false);
                                 stage.setScene(scene);
                                 stage.show();
-                                new BounceIn(load).play();
+                                new BounceIn(load).setSpeed(.8).play();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -929,7 +936,7 @@ public class WelcomeController implements Initializable {
                                 });
                                 stage.setScene(scene);
                                 stage.show();
-                                new BounceIn(load).play();
+                                new BounceIn(load).setSpeed(.8).play();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
