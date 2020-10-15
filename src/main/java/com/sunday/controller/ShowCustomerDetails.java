@@ -18,7 +18,6 @@ import javafx.print.PageOrientation;
 import javafx.print.Paper;
 import javafx.print.Printer;
 import javafx.print.PrinterJob;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -66,14 +65,16 @@ public class ShowCustomerDetails implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        exit.setCancelButton(true);
         exit.setOnAction(e -> ((Stage) exit.getScene().getWindow()).close());
     }
 
     public void setCustomer(Customer c) {
+        customerModifiedTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         var paidCol = new TableColumn<CustomerModifiedObservable, Integer>("Amount Paid");
-        paidCol.setMaxWidth(150);
+
         var dateCol = new TableColumn<CustomerModifiedObservable, String>("Date");
-        dateCol.setMaxWidth(150);
+
         paidCol.setCellValueFactory(p -> p.getValue().paid.asObject());
         dateCol.setCellValueFactory(p -> p.getValue().date);
         if (c != null) {
@@ -111,7 +112,7 @@ public class ShowCustomerDetails implements Initializable {
             var job = PrinterJob.createPrinterJob();
             var p = Printer.getAllPrinters();
             Printer selectedPrinter = null;
-            Paper paper = PrintHelper.createPaper("Roll80",80 , 1000, Units.MM);
+            Paper paper = PrintHelper.createPaper("Roll80", 80, 1000, Units.MM);
             for (Printer pt : p) {
                 if (pt.getName().equals(getPrinterFromDB())) {
                     selectedPrinter = pt;

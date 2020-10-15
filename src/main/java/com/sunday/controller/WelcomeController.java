@@ -38,11 +38,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.AudioClip;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -165,7 +165,6 @@ public class WelcomeController implements Initializable {
 
     private double xOffSet = 0;
     private double yOffSet = 0;
-    private boolean play = true;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -187,16 +186,17 @@ public class WelcomeController implements Initializable {
         createCustomerTable();
         createStockTable();
         bindingFields();
-        time.setOnMouseClicked(e -> {
-            try {
-                AudioClip rn = new AudioClip(surah.getURI().toString());
-                rn.setVolume(100);
-                rn.stop();
-                rn.play();
-            } catch (Exception e1) {
-                e1.printStackTrace();
+        time.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.P) {
+                play();
             }
         });
+        main.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.P) {
+                play();
+            }
+        });
+        time.setOnMouseClicked(e -> play());
         exit.setOnAction(e -> {
             new FadeInDown(main).play();
             Platform.exit();
@@ -257,6 +257,7 @@ public class WelcomeController implements Initializable {
                 scene.setOnKeyPressed(event -> {
                     if (event.getCode() == KeyCode.ESCAPE) stage.close();
                 });
+                stage.getIcons().add(new Image("image/icon.png"));
                 stage.setScene(scene);
                 stage.show();
                 new BounceIn(load).play();
@@ -278,6 +279,17 @@ public class WelcomeController implements Initializable {
         });
     }
 
+    private void play() {
+        try {
+            AudioClip rn = new AudioClip(surah.getURI().toString());
+            rn.setVolume(100);
+            rn.stop();
+            rn.play();
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+    }
+
     private void textBinding() {
         TextFields.bindAutoCompletion(customerFilter, List.of("CUST"));
         TextFields.bindAutoCompletion(customerName, customerService.getAllCustomerNames());
@@ -286,6 +298,7 @@ public class WelcomeController implements Initializable {
 
 
     private void setTime() {
+        time.setTextFill(Color.GREEN);
         time.setText("بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِیْمَِلْحَمْدُ لِلّٰهِ رَبِّ الْعٰلَمِیْنَۙالرَّحْمٰنِ الرَّحِیْمِۙمٰلِكِ یَوْمِ الدِّیْنِؕاِیَّاكَ نَعْبُدُ وَ اِیَّاكَ نَسْتَعِیْنُؕاِهْدِنَا الصِّرَاطَ الْمُسْتَقِیْمَۙصِرَاطَ الَّذِیْنَ اَنْعَمْتَ عَلَیْهِمْ ﴰ غَیْرِ الْمَغْضُوْبِ عَلَیْهِمْ وَ لَا الضَّآلِّیْنَ۠");
     }
 
@@ -587,6 +600,7 @@ public class WelcomeController implements Initializable {
 
     private void addButtonToStockTable() {
         var show = new TableColumn<StockObservable, Void>("");
+        show.setPrefWidth(58);
         var showCellFactory = new Callback<TableColumn<StockObservable, Void>, TableCell<StockObservable, Void>>() {
             @Override
             public TableCell<StockObservable, Void> call(TableColumn<StockObservable, Void> param) {
@@ -594,11 +608,17 @@ public class WelcomeController implements Initializable {
                     final Button btn = new Button("Show Details");
 
                     {
+
                         btn.setStyle("-fx-background-color: #ffffff;" +
-                                "-fx-text-fill: #4934eb;" +
+                                "-fx-text-fill: #1e88e5;" +
                                 "-fx-font-size: 15;" +
-                                "-fx-background-radius: 0;");
+                                "-fx-background-radius: 20;" +
+                                "-fx-font-weight: bold;" +
+                                "-fx-background-color: #37474f;");
                         btn.getStyleClass().add(".btn");
+                        var show = new ImageView(new Image("image/eye.png"));
+                        btn.setGraphic(show);
+                        btn.setGraphicTextGap(5);
                         btn.setOnAction(a -> {
                             try {
                                 var stId = getTableView().getItems().get(getIndex()).stockId.getValue();
@@ -614,6 +634,8 @@ public class WelcomeController implements Initializable {
                                     if (event.getCode() == KeyCode.ESCAPE) stage.close();
                                 });
                                 stage.initStyle(StageStyle.TRANSPARENT);
+                                stage.setTitle("Stock Details");
+                                stage.getIcons().add(new Image("image/icon.png"));
                                 stage.setResizable(false);
                                 stage.setScene(scene);
                                 stage.show();
@@ -646,10 +668,15 @@ public class WelcomeController implements Initializable {
 
                     {
                         btn.setStyle("-fx-background-color: #ffffff;" +
-                                "-fx-text-fill: #eb4034;" +
+                                "-fx-text-fill: red;" +
                                 "-fx-font-size: 15;" +
-                                "-fx-background-radius: 0;");
+                                "-fx-font-weight: bold;" +
+                                "-fx-background-radius: 20;" +
+                                "-fx-background-color: #37474f;");
                         btn.getStyleClass().add(".btn");
+                        var show = new ImageView(new Image("image/delete.png"));
+                        btn.setGraphic(show);
+                        btn.setGraphicTextGap(5);
                         btn.setOnAction(a -> {
                             try {
                                 var st = getTableView().getItems().get(getIndex()).stockId.getValue();
@@ -660,7 +687,6 @@ public class WelcomeController implements Initializable {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-
                         });
                     }
 
@@ -671,7 +697,6 @@ public class WelcomeController implements Initializable {
                             setGraphic(null);
                         else
                             setGraphic(btn);
-
                     }
                 };
             }
@@ -868,7 +893,7 @@ public class WelcomeController implements Initializable {
     }
 
     private void addShowButton() {
-        var show = new TableColumn<CustomerObservable, Void>("Show Details");
+        var show = new TableColumn<CustomerObservable, Void>("");
         var delete = new TableColumn<CustomerObservable, Void>("");
         var showCellFactory = new Callback<TableColumn<CustomerObservable, Void>, TableCell<CustomerObservable, Void>>() {
             @Override
@@ -878,9 +903,14 @@ public class WelcomeController implements Initializable {
 
                     {
                         btn.setStyle("-fx-background-color: #ffffff;" +
-                                "-fx-text-fill: #4934eb;" +
+                                "-fx-text-fill: #1e88e5;" +
                                 "-fx-font-size: 15;" +
-                                "-fx-background-radius: 0;");
+                                "-fx-background-radius: 20;" +
+                                "-fx-font-weight: bold;" +
+                                "-fx-background-color: #37474f;");
+                        var show = new ImageView(new Image("image/eye.png"));
+                        btn.setGraphic(show);
+                        btn.setGraphicTextGap(5);
                         btn.setOnAction(a -> {
                             try {
                                 var customerId = getTableView().getItems().get(getIndex()).custNo.getValue();
@@ -894,6 +924,8 @@ public class WelcomeController implements Initializable {
                                 var scene = new Scene(load);
                                 stage.setResizable(false);
                                 stage.initStyle(StageStyle.TRANSPARENT);
+                                stage.setTitle("Customer Details");
+                                stage.getIcons().add(new Image("image/icon.png"));
                                 scene.setOnKeyPressed(event -> {
                                     if (event.getCode() == KeyCode.ESCAPE) {
                                         stage.close();
@@ -928,11 +960,16 @@ public class WelcomeController implements Initializable {
                     final Button btn = new Button("Delete");
 
                     {
-                        btn.getStyleClass().add(".btn");
                         btn.setStyle("-fx-background-color: #ffffff;" +
-                                "-fx-text-fill: #eb4034;" +
+                                "-fx-text-fill: red;" +
                                 "-fx-font-size: 15;" +
-                                "-fx-background-radius: 0;");
+                                "-fx-font-weight: bold;" +
+                                "-fx-background-radius: 20;" +
+                                "-fx-background-color: #37474f;");
+                        btn.getStyleClass().add(".btn");
+                        var show = new ImageView(new Image("image/delete.png"));
+                        btn.setGraphic(show);
+                        btn.setGraphicTextGap(5);
                         btn.setOnAction(a -> {
                             var customerId = getTableView().getItems().get(getIndex()).custNo.getValue();
                             if (customerService.deleteRecord(customerId)) {

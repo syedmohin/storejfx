@@ -22,7 +22,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
@@ -63,6 +62,7 @@ public class ShowStockDetails implements Initializable {
     }
 
     public void setStock(Stock stock) {
+        exit.setCancelButton(true);
         vehicleNo.setText(stock.getVehicleNo());
         totalAmount.setText(stock.getTotalAmount() + "");
         balance.setText(stock.getBalance() + "");
@@ -83,7 +83,7 @@ public class ShowStockDetails implements Initializable {
         stockTable.setEditable(true);
         stockTable.getColumns().addAll(paid, date);
         stockTable.setItems(ob);
-        print.setOnAction(e->{
+        print.setOnAction(e -> {
             String stockData = printerService.printStock(stock);
             var job = PrinterJob.createPrinterJob();
             var p = Printer.getAllPrinters();
@@ -104,12 +104,14 @@ public class ShowStockDetails implements Initializable {
         });
 
     }
+
     private String getPrinterFromDB() {
         var list = new ArrayList<com.sunday.model.Printer>();
         var it = printerRepository.findAll();
         it.forEach(list::add);
         return list.get(0).getPrinterName();
     }
+
     private static class StockModifiedAmountObservable {
         final IntegerProperty paid;
         final StringProperty date;

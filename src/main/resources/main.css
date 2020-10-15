@@ -1,41 +1,30 @@
-
 .table-view{
-  -fx-background-color: #000000;
+  -fx-background-color: #ffffff;
 }
 .table-view .column-header,
 .table-view .column-header-background .filler {
-    -fx-background-color:  #000000;
-    /*
-    #6622CC
-    */
-    -fx-font-size: 15;
+    -fx-background-color:  #ffffff;
+    -fx-font-size: 20;
     -fx-alignment: CENTER;
 }
 .table-view .column-header .label{
-   -fx-text-fill: white;
-   -fx-font-size: 15;
+   -fx-text-fill: #00796b;
+   -fx-font-size: 16;
    -fx-font-weight: bold;
    -fx-alignment: CENTER;
 }
 .table-view .cell{
-  -fx-cell-size: 55;
-  -fx-font-size: 15;
+  -fx-cell-size: 58;
+  -fx-font-size: 16;
   -fx-alignment: CENTER;
-  -fx-background-color: #000000;
-  /*
-  #29292D
-  lightgray
-  */
-  -fx-border-color: #000000;
-  -fx-text-fill: #ffffff;
+  -fx-background-color: #ffffff;
+  -fx-border-color: #ffffff;
+  -fx-text-fill: #00796b;
   -fx-alignment: CENTER;
 }
-.table-row-cell:selected {
-   -fx-background-color: whitesmoke;
+.table-row-cell:hover:selected {
+   -fx-background-color: #304ffe;
    -fx-text-background-color:  red;
-   /*
-   #6622CC
-   */
 }
 /* scroll bar starts here */
 
@@ -58,22 +47,33 @@
 .table-view .scroll-bar:horizontal .thumb,
 .table-view .scroll-bar:vertical .thumb {
     -fx-background-color:derive( white,90%);
-	-fx-background-insets: 2, 0, 0;
+	-fx-background-insets: 2, 0, 0, 0;
 	-fx-background-radius: 2em;
 }
 .list-cell{
-    -fx-background-color: #000000;
-    -fx-border-color: #ffffff;
+    -fx-background-color:  #1e88e5;
+    -fx-border-color: #c5cae9;
     -fx-font-size: 2em;
-    -fx-text-fill: white;
+    -fx-text-fill: black;
 }
 .list-cell:pressed {
     -fx-fill: linear-gradient(to left, #9c1017, #8f0042);
 }
 .list-cell:hover:selected {
-    -fx-border-color: #ffffff;
-    -fx-border-color:#ff4d4d;
+    -fx-border-color: #c5cae9;
+    -fx-background-color: #00796b;
 }
 .submit:hover:selected{
     -fx-background-color: red;
+}
+.exit:hover:selected:focus{
+    -fx-color: red;
+}
+#customerFilter {
+    -fx-background-image: url('image/search.png');
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: left center;
+}
+#customerFilter .paragraph-box .paragraph-text {
+    -fx-padding: 5px;
 }
