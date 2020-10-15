@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="569.0" prefWidth="600.0" style="-fx-background-color: #1e88e5; -fx-border-width: 10;" stylesheets="@main.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sunday.controller.SetPrinterController">
+<AnchorPane prefHeight="570.0" prefWidth="570.0" style="-fx-background-color: #1e88e5; -fx-border-width: 10;" stylesheets="@main.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sunday.controller.SetPrinterController">
     <children>
         <Label layoutX="33.0" layoutY="44.0" text="Select the Printer" textFill="#1e88e5">
             <font>

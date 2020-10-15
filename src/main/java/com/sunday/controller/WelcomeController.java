@@ -37,6 +37,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -62,9 +63,7 @@ import javax.print.PrintServiceLookup;
 import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -102,9 +101,6 @@ public class WelcomeController implements Initializable {
     @FXML
     private AnchorPane stock;
 
-    /*
-     * All TextField
-     */
     @FXML
     private TextField weightCustomer;
     @FXML
@@ -345,7 +341,6 @@ public class WelcomeController implements Initializable {
         var sma = new StockModifiedAmount();
         if (vehicleNoStock.getText().trim().isEmpty()) {
             alertMe("You need to fill the Vehicle Number ");
-            valid = false;
         } else {
             stock.setVehicleNo(vehicleNoStock.getText().toUpperCase().trim());
             valid = true;
@@ -414,40 +409,32 @@ public class WelcomeController implements Initializable {
         var paid = 0;
         var customer = new Customer();
         var cma = new CustomerModifiedAmount();
-        var valid = false;
         if (customerName.getText().trim().isEmpty()) {
             alertMe("You need to fill the Customer Name");
         } else {
             customer.setCustomerName(customerName.getText());
-            valid = true;
         }
         if (weightCustomer.getText().trim().isEmpty()) {
             alertMe("You need to fill the Weight");
-            valid = false;
         } else {
             try {
                 var w = Integer.parseInt(weightCustomer.getText());
                 total = w;
                 customer.setWeight(w);
-                valid = true;
             } catch (Exception e) {
                 alertMe("Weight must be Number");
-                valid = false;
             }
         }
         if (rateCustomer.getText().trim().isEmpty()) {
             alertMe("You need to fill the Rate");
-            valid = false;
         } else {
             try {
                 var r = Integer.parseInt(rateCustomer.getText());
                 customer.setRate(r);
                 total = total * r;
                 customer.setTotalAmount(total);
-                valid = true;
             } catch (Exception e) {
                 alertMe("Rate must be Number");
-                valid = false;
             }
         }
         if (crateCustomer.getText().trim().isEmpty()) {
@@ -456,10 +443,8 @@ public class WelcomeController implements Initializable {
             try {
                 var c = Integer.parseInt(crateCustomer.getText());
                 customer.setCrate(c);
-                valid = true;
             } catch (Exception e) {
                 alertMe("Crate must be Number");
-                valid = false;
             }
         }
         if (paidAmountCustomer.getText().trim().isEmpty()) {
@@ -485,14 +470,19 @@ public class WelcomeController implements Initializable {
                 }
             } catch (Exception e) {
                 alertMe("Amount must be Number");
-                valid = false;
             }
         }
-        if (valid) {
+        if (customer.getCrate() != 0 | customer.getWeight() != 0 | customer.getTotalAmount() != 0 | customer.getCustomerName() != null | customer.getRate() != 0) {
             if (paid > total) {
-                Alert alert = new Alert(AlertType.WARNING);
-                alert.setTitle("Infomation");
+                var boxBlur = new BoxBlur(4, 4, 3);
+                var alert = new Alert(AlertType.WARNING);
+                alert.setDialogPane(getDialogPane());
+                alert.setTitle("Information");
                 alert.setContentText("You have entered Paid Amount more than Total Amount");
+                alert.initStyle(StageStyle.UNDECORATED);
+                alert.setGraphic(new ImageView(new Image("image/error.png")));
+                alert.setOnShowing(e -> main.setEffect(boxBlur));
+                alert.setOnCloseRequest(e -> main.setEffect(null));
                 alert.showAndWait();
                 paidAmountCustomer.setFocusTraversable(true);
             } else {
@@ -508,6 +498,14 @@ public class WelcomeController implements Initializable {
         }
     }
 
+    private DialogPane getDialogPane() {
+        var dialogPane = new DialogPane();
+        dialogPane.getStylesheets().add(Objects.requireNonNull(getClass().getClassLoader().getResource("main.css")).toExternalForm());
+        dialogPane.getStyleClass().add("total");
+        dialogPane.setExpanded(true);
+        return dialogPane;
+    }
+
     private void printCustomer(Customer c) {
         String customerData = null;
         if (c != null) {
@@ -520,14 +518,14 @@ public class WelcomeController implements Initializable {
         for (Printer pt : p) {
             if (pt.getName().equals(getPrinterFromDB())) {
                 selectedPrinter = pt;
-                selectedPrinter.createPageLayout(a4, PageOrientation.PORTRAIT, 0.039f, 0.039f, 0.039f, 0.039f);
+                selectedPrinter.createPageLayout(a4, PageOrientation.PORTRAIT, 0.08f, 0.08f, 0.08f, 0.08f);
             }
         }
         job.setPrinter(selectedPrinter);
         var wv = new WebView();
-        wv.setPrefSize(300, 300);
-        wv.setMaxSize(300, 300);
         var we = wv.getEngine();
+        wv.setPrefWidth(80);
+        wv.prefWidth(80);
         we.loadContent(customerData);
         we.print(job);
         job.endJob();
@@ -539,7 +537,6 @@ public class WelcomeController implements Initializable {
         it.forEach(list::add);
         return list.get(0).getPrinterName();
     }
-
 
     private void createStockTable() {
         var stock = stockService.getAllData();
@@ -609,8 +606,7 @@ public class WelcomeController implements Initializable {
 
                     {
 
-                        btn.setStyle("-fx-background-color: #ffffff;" +
-                                "-fx-text-fill: #1e88e5;" +
+                        btn.setStyle("-fx-text-fill: #1e88e5;" +
                                 "-fx-font-size: 15;" +
                                 "-fx-background-radius: 20;" +
                                 "-fx-font-weight: bold;" +
@@ -667,8 +663,7 @@ public class WelcomeController implements Initializable {
                     final Button btn = new Button("Delete");
 
                     {
-                        btn.setStyle("-fx-background-color: #ffffff;" +
-                                "-fx-text-fill: red;" +
+                        btn.setStyle("-fx-text-fill: red;" +
                                 "-fx-font-size: 15;" +
                                 "-fx-font-weight: bold;" +
                                 "-fx-background-radius: 20;" +
@@ -759,6 +754,8 @@ public class WelcomeController implements Initializable {
         customerTable.setEditable(true);
         var custNo = new TableColumn<CustomerObservable, String>("#");
         custNo.setCellValueFactory(p -> p.getValue().custNo);
+        custNo.setSortable(true);
+        custNo.setComparator(Comparator.comparing(String::toLowerCase));
 
         var customerName = new TableColumn<CustomerObservable, String>("Customer Name");
         customerName.setCellValueFactory(param -> param.getValue().name);
@@ -902,8 +899,7 @@ public class WelcomeController implements Initializable {
                     final Button btn = new Button("Show Details");
 
                     {
-                        btn.setStyle("-fx-background-color: #ffffff;" +
-                                "-fx-text-fill: #1e88e5;" +
+                        btn.setStyle("-fx-text-fill: #1e88e5;" +
                                 "-fx-font-size: 15;" +
                                 "-fx-background-radius: 20;" +
                                 "-fx-font-weight: bold;" +
@@ -960,8 +956,7 @@ public class WelcomeController implements Initializable {
                     final Button btn = new Button("Delete");
 
                     {
-                        btn.setStyle("-fx-background-color: #ffffff;" +
-                                "-fx-text-fill: red;" +
+                        btn.setStyle("-fx-text-fill: red;" +
                                 "-fx-font-size: 15;" +
                                 "-fx-font-weight: bold;" +
                                 "-fx-background-radius: 20;" +

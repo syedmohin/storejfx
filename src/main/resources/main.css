@@ -1,79 +1,151 @@
-.table-view{
-  -fx-background-color: #ffffff;
+.table-view {
+    -fx-background-color: #ffffff;
+    -fx-selected-row: #304ffe;
 }
+
 .table-view .column-header,
 .table-view .column-header-background .filler {
-    -fx-background-color:  #ffffff;
+    -fx-background-color: #ffffff;
     -fx-font-size: 20;
     -fx-alignment: CENTER;
 }
-.table-view .column-header .label{
-   -fx-text-fill: #00796b;
-   -fx-font-size: 16;
-   -fx-font-weight: bold;
-   -fx-alignment: CENTER;
+
+.table-view .column-header .label {
+    -fx-text-fill: #00796b;
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER;
 }
-.table-view .cell{
-  -fx-cell-size: 58;
-  -fx-font-size: 16;
-  -fx-alignment: CENTER;
-  -fx-background-color: #ffffff;
-  -fx-border-color: #ffffff;
-  -fx-text-fill: #00796b;
-  -fx-alignment: CENTER;
+
+.table-view .cell {
+    -fx-cell-size: 58;
+    -fx-font-size: 16;
+    -fx-alignment: CENTER;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ffffff;
+    -fx-text-fill: #00796b;
 }
-.table-row-cell:hover:selected {
-   -fx-background-color: #304ffe;
-   -fx-text-background-color:  red;
+.table-row-cell:selected{
+    -fx-text-fill: #00796b;
 }
+.table-view :odd{
+    -fx-background-color: white;
+}
+.table-view :odd{
+    -fx-background-color: #eeeeee;
+}
+
+.table-row-cell :odd{
+    -fx-background-color: white;
+}
+.table-row-cell :odd{
+    -fx-background-color: #eeeeee;
+}
+.table-row-cell :selected .table-cell {
+    -fx-background-color: #304ffe;
+    -fx-text-background-color: #00796b;
+}
+
 /* scroll bar starts here */
 
 /* The increment and decrement button CSS class of scrollbar */
-.table-view .increment-button ,.table-view .decrement-button {
-    -fx-background-color:transparent;
-	-fx-background-radius: 2em;
+.table-view .increment-button, .table-view .decrement-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 2em;
 }
 
 /* The main scrollbar **track** CSS class  */
 .table-view .scroll-bar:horizontal .track,
-.table-view .scroll-bar:vertical .track{
-	-fx-background-color: transparent;
-	-fx-border-color:derive( white,80%);
-	-fx-background-radius: 2em;
-	-fx-border-radius:2em;
+.table-view .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+    -fx-border-color: derive(white, 80%);
+    -fx-background-radius: 2em;
+    -fx-border-radius: 2em;
 }
 
 /* The main scrollbar **thumb** CSS class which we drag every time (movable) */
 .table-view .scroll-bar:horizontal .thumb,
 .table-view .scroll-bar:vertical .thumb {
-    -fx-background-color:derive( white,90%);
-	-fx-background-insets: 2, 0, 0, 0;
-	-fx-background-radius: 2em;
+    -fx-background-color: derive(white, 90%);
+    -fx-background-insets: 2, 0, 0, 0;
+    -fx-background-radius: .5em;
+    -fx-border-radius: .5em;
 }
-.list-cell{
-    -fx-background-color:  #1e88e5;
+
+.list-cell {
+    -fx-background-color: #1e88e5;
     -fx-border-color: #c5cae9;
     -fx-font-size: 2em;
     -fx-text-fill: black;
 }
+
 .list-cell:pressed {
     -fx-fill: linear-gradient(to left, #9c1017, #8f0042);
 }
+
 .list-cell:hover:selected {
     -fx-border-color: #c5cae9;
     -fx-background-color: #00796b;
 }
-.submit:hover:selected{
+
+.list-cell .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+    -fx-border-color: derive(white, 80%);
+    -fx-background-radius: .5em;
+}
+
+.submit:hover:selected:focused {
     -fx-background-color: red;
 }
-.exit:hover:selected:focus{
+
+.exit:hover:selected:focused {
     -fx-color: red;
 }
+
 #customerFilter {
     -fx-background-image: url('image/search.png');
     -fx-background-repeat: no-repeat;
     -fx-background-position: left center;
+    -fx-border-insets: 10px;
 }
-#customerFilter .paragraph-box .paragraph-text {
-    -fx-padding: 5px;
+
+.total {
+    -fx-border-color: #ffffff;
+    -fx-border-width: 2px;
+}
+
+.total > .button > .container {
+    -fx-background-color: black;
+}
+
+.total > .content .label {
+    -fx-padding: 0.5em 0.5em 0.5em 0.5em;
+    -fx-background-color: #304ffe;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+}
+
+.total .header-panel {
+    -fx-background-color: black;
+}
+
+.total .header-panel .label {
+    -fx-background-color: yellow;
+    -fx-background-radius: 10px;
+    -fx-text-fill: black;
+    -fx-font-size: 15px;
+}
+
+.total .button {
+    -fx-background-color: black;
+    -fx-text-fill: white;
+    -fx-wrap-text: true;
+    -fx-effect: dropshadow(three-pass-box, yellow, 10.0, 0.0, 0.0, 0.0);
+    -fx-cursor: hand;
+}
+
+.total .button:hover {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
 }

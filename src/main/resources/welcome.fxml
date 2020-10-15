@@ -127,7 +127,7 @@
                         </ImageView>
                      </graphic>
                         </Button>
-                        <TextField fx:id="customerFilter" alignment="CENTER_RIGHT" layoutX="1235.0" layoutY="263.0" prefHeight="39.0" prefWidth="250.0" promptText="Search" style="-fx-background-radius: 25; -fx-background-image: 10;">
+                        <TextField fx:id="customerFilter" alignment="CENTER_RIGHT" layoutX="1235.0" layoutY="263.0" prefHeight="39.0" prefWidth="250.0" promptText="Search" style="-fx-background-radius: 25;">
                             <font>
                                 <Font size="15.0" />
                             </font>
@@ -263,9 +263,9 @@
                         <Font size="16.0" />
                     </font>
                 </Label>
-                <Label layoutX="16.0" layoutY="937.0" prefHeight="56.0" prefWidth="195.0" text="Mohd Obaid Ahmed" textFill="#e53935">
+                <Label layoutX="20.0" layoutY="937.0" prefHeight="56.0" prefWidth="209.0" text="Mohd Obaid Ahmed" textFill="#e53935">
                     <font>
-                        <Font name="Gigi" size="25.0" />
+                        <Font name="Mistral" size="32.0" />
                     </font>
                 </Label>
                 <Button fx:id="unpaid" layoutY="620.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="227.0" style="-fx-background-color: #ffffff; -fx-background-radius: 25;" text="Export Unpaid Customer">
