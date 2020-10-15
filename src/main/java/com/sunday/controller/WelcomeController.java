@@ -491,7 +491,7 @@ public class WelcomeController implements Initializable {
                 alert.setOnShowing(e -> main.setEffect(boxBlur));
                 alert.setOnCloseRequest(e -> main.setEffect(null));
                 alert.showAndWait();
-                paidAmountCustomer.setFocusTraversable(true);
+                paidAmountCustomer.requestFocus();
             } else {
                 var c = customerService.insert(customer, cma);
                 ob.add(new CustomerObservable(c.getCustomerId(), c.getCustomerName(), c.getWeight(), c.getRate(), c.getCrate(), c.getReturnedCrate(), c.getTotalAmount(), c.getBalance(), c.getDate()));
@@ -503,14 +503,6 @@ public class WelcomeController implements Initializable {
         } else {
             alertMe("Fill in the details");
         }
-    }
-
-    private DialogPane getDialogPane() {
-        var dialogPane = new DialogPane();
-        dialogPane.getStylesheets().add(Objects.requireNonNull(getClass().getClassLoader().getResource("main.css")).toExternalForm());
-        dialogPane.getStyleClass().add("total");
-        dialogPane.setExpanded(true);
-        return dialogPane;
     }
 
     private void printCustomer(Customer c) {
