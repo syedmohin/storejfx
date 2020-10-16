@@ -112,11 +112,11 @@ public class ShowCustomerDetails implements Initializable {
             var job = PrinterJob.createPrinterJob();
             var p = Printer.getAllPrinters();
             Printer selectedPrinter = null;
-            Paper paper = PrintHelper.createPaper("Roll80", 80, 1000, Units.MM);
+            Paper paper = PrintHelper.createPaper("AFC", 80, 1000, Units.MM);
             for (Printer pt : p) {
                 if (pt.getName().equals(getPrinterFromDB())) {
                     selectedPrinter = pt;
-                    selectedPrinter.createPageLayout(paper, PageOrientation.PORTRAIT, 0.0f, 0.0f, 0.0f, 0.0f);
+                    selectedPrinter.createPageLayout(paper, PageOrientation.PORTRAIT, 0.08f, 0.08f, 0.08f, 0.08f);
                 }
             }
             job.setPrinter(selectedPrinter);

@@ -328,7 +328,6 @@ public class WelcomeController implements Initializable {
         alert.setOnShowing(e -> main.setEffect(boxBlur));
         alert.setOnCloseRequest(e -> main.setEffect(null));
         alert.showAndWait();
-        alert.showAndWait();
     }
 
     private void alertSuccess(String msg, Alert.AlertType type, String header) {
@@ -340,7 +339,6 @@ public class WelcomeController implements Initializable {
         var boxBlur = new BoxBlur(4, 4, 3);
         alert.setOnShowing(e -> main.setEffect(boxBlur));
         alert.setOnCloseRequest(e -> main.setEffect(null));
-        alert.showAndWait();
         alert.showAndWait();
     }
 

@@ -30,9 +30,4 @@ public class UserService {
         u.setPassword(pass);
         return userRepository.save(u);
     }
-
-    public void allData() {
-        var i = userRepository.findAll();
-        i.forEach(System.out::println);
-    }
 }

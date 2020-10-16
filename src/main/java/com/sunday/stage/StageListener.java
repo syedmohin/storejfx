@@ -1,6 +1,7 @@
 package com.sunday.stage;
 
 import animatefx.animation.BounceIn;
+import animatefx.animation.FadeIn;
 import com.sun.javafx.sg.prism.NGImageView;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -40,7 +41,7 @@ public class StageListener implements ApplicationListener<StageReadyEvent> {
             var fxmlLoader = new FXMLLoader(fxml.getURL());
             fxmlLoader.setControllerFactory(applicationContext::getBean);
             Parent root = fxmlLoader.load();
-            Scene scene = new Scene(root);
+            var scene = new Scene(root);
             stage.setTitle(applicationTitle);
             s = stage;
             scene.setFill(Color.TRANSPARENT);
@@ -51,6 +52,7 @@ public class StageListener implements ApplicationListener<StageReadyEvent> {
             stage.setScene(scene);
             stage.show();
             new BounceIn(root).setSpeed(0.4).play();
+            new FadeIn(root).setSpeed(0.8).play();
         } catch (Exception e) {
             e.printStackTrace();
         }

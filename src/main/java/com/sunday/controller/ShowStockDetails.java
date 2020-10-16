@@ -84,7 +84,7 @@ public class ShowStockDetails implements Initializable {
         stockTable.getColumns().addAll(paid, date);
         stockTable.setItems(ob);
         print.setOnAction(e -> {
-            String stockData = printerService.printStock(stock);
+            var stockData = printerService.printStock(stock);
             var job = PrinterJob.createPrinterJob();
             var p = Printer.getAllPrinters();
             Printer selectedPrinter = null;

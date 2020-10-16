@@ -35,15 +35,19 @@ public class SetPrinterController implements Initializable {
     }
 
     public void setPrinterList(List<String> p) {
-        ObservableList<String> po = FXCollections.observableArrayList(p);
+        var po = FXCollections.observableArrayList(p);
         listPrinter.setItems(po);
         setPrinter.setOnAction(e -> {
             printerRepository.deleteAll();
             var printer = new Printer();
             printer.setPrinterName(listPrinter.getSelectionModel().getSelectedItem());
             printerRepository.save(printer);
-            ((Stage) exit.getScene().getWindow()).close();
+            exit();
         });
-        exit.setOnAction(e -> ((Stage) exit.getScene().getWindow()).close());
+        exit.setOnAction(e -> exit());
+    }
+
+    private void exit() {
+        ((Stage) exit.getScene().getWindow()).close();
     }
 }

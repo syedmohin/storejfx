@@ -79,7 +79,7 @@ public class PrinterService {
         var paid = sma.stream()
                 .mapToInt(StockModifiedAmount::getPaidAmount)
                 .sum();
-        String data = """
+        StringBuilder data = new StringBuilder("""
                 <html lang="en">
                    <head>
                         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -142,21 +142,21 @@ public class PrinterService {
                                            <th class="td">Paid Amount</th>
                                            <th class="td">on Date</th>
                                          </tr>
-                """.formatted(s.getVehicleNo(), s.getWeight(), s.getRate(), s.getTotalAmount(), paid, s.getDate().toString(), s.getBalance());
+                """.formatted(s.getVehicleNo(), s.getWeight(), s.getRate(), s.getTotalAmount(), paid, s.getDate().toString(), s.getBalance()));
         for (StockModifiedAmount s1 : sma) {
-            data += """
+            data.append("""
                             <tr>
                               <td class="td">%d</td>
                               <td class="td">%s</td>
                             </tr>
-                    """.formatted(s1.getPaidAmount(), s1.getModifieddate());
+                    """.formatted(s1.getPaidAmount(), s1.getModifieddate()));
         }
-        data += """
+        data.append("""
                 </table>
                     </div>
                   </body>
                 </html>
-                """;
-        return data;
+                """);
+        return data.toString();
     }
 }

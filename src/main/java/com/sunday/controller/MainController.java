@@ -79,7 +79,6 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         movable();
-        userService.allData();
         main.setOpacity(0);
         title.setOpacity(1);
         loginPane.setVisible(true);
