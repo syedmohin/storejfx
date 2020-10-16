@@ -3,7 +3,6 @@ package com.sunday.controller;
 import animatefx.animation.BounceIn;
 import animatefx.animation.FadeIn;
 import animatefx.animation.FadeOut;
-import com.sunday.repository.UserRepository;
 import com.sunday.service.UserService;
 import com.sunday.stage.StageListener;
 import javafx.application.Platform;
@@ -124,9 +123,6 @@ public class MainController implements Initializable {
                     try {
                         StageListener.s.close();
                         var stage = new Stage();
-                        var fxmlLoader = new FXMLLoader(fxml.getURL());
-                        fxmlLoader.setControllerFactory(applicationContext::getBean);
-                        Parent root = fxmlLoader.load();
                         Platform.runLater(() -> {
                             try {
                                 AudioClip rn = new AudioClip(ring.getURI().toString());
@@ -135,6 +131,9 @@ public class MainController implements Initializable {
                                 ae.printStackTrace();
                             }
                         });
+                        var fxmlLoader = new FXMLLoader(fxml.getURL());
+                        fxmlLoader.setControllerFactory(applicationContext::getBean);
+                        Parent root = fxmlLoader.load();
                         var scene = new Scene(root);
                         stage.setTitle(applicationTitle);
                         stage.centerOnScreen();
