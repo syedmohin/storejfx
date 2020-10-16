@@ -71,16 +71,6 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class WelcomeController implements Initializable {
 
-    @Value("classpath:/001.mp3")
-    private Resource surah;
-    private final ApplicationContext applicationContext;
-    private final CustomerService customerService;
-    private final StockService stockService;
-    private final ExcelFileService excelFileService;
-    private final PrinterRepository printerRepository;
-
-    final DirectoryChooser directoryChooser = new DirectoryChooser();
-
     @Value("classpath:/showcustomerdetails.fxml")
     private Resource showcustomdetails;
 
@@ -89,6 +79,23 @@ public class WelcomeController implements Initializable {
 
     @Value("classpath:/printerselection.fxml")
     private Resource printerList;
+
+    @Value("classpath:/001.mp3")
+    private Resource surah;
+
+    @Value("classpath:/main.fxml")
+    private Resource fxml;
+    @Value("classpath:/image/icon.png")
+    private Resource icon;
+
+    private final ApplicationContext applicationContext;
+    private final CustomerService customerService;
+    private final StockService stockService;
+    private final ExcelFileService excelFileService;
+    private final PrinterRepository printerRepository;
+
+
+    final DirectoryChooser directoryChooser = new DirectoryChooser();
     @FXML
     private Button submitCustomer;
     @FXML
@@ -161,6 +168,8 @@ public class WelcomeController implements Initializable {
 
     private double xOffSet = 0;
     private double yOffSet = 0;
+    @FXML
+    private Button logout;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -233,6 +242,26 @@ public class WelcomeController implements Initializable {
         var printToolTip = new Tooltip();
         printToolTip.setText("Select the Printer ");
         printer.setTooltip(printToolTip);
+        logout.setOnAction(e -> {
+            try {
+                ((Stage) logout.getScene().getWindow()).close();
+                var stage = StageListener.s;
+                var fxmlLoader = new FXMLLoader(fxml.getURL());
+                fxmlLoader.setControllerFactory(applicationContext::getBean);
+                Parent root = fxmlLoader.load();
+                var scene = new Scene(root);
+                scene.setFill(Color.TRANSPARENT);
+                stage.centerOnScreen();
+                stage.setResizable(false);
+                stage.getIcons().add(new Image(icon.getInputStream()));
+                stage.setScene(scene);
+                stage.show();
+                new BounceIn(root).setSpeed(0.4).play();
+                new FadeIn(root).setSpeed(0.8).play();
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+        });
         printer.setOnAction(e -> {
             try {
                 var printServices = PrintServiceLookup.lookupPrintServices(null, null);

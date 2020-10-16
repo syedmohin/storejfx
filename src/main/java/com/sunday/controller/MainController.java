@@ -13,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.AudioClip;
@@ -147,6 +148,8 @@ public class MainController implements Initializable {
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
+                }else {
+                    alertBox("Login Form","Username and Password mismatch");
                 }
             } else {
                 alertBox("Login Form", "Must be filled ");
@@ -156,8 +159,12 @@ public class MainController implements Initializable {
 
     private void alertBox(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
+        var boxBlur = new BoxBlur(4, 4, 3);
         alert.setContentText(content);
         alert.setTitle(title);
+        alert.initOwner(MainController.s);
+        alert.setOnShowing(e -> main.setEffect(boxBlur));
+        alert.setOnCloseRequest(e -> main.setEffect(null));
         alert.showAndWait();
     }
 

@@ -229,6 +229,18 @@
                       </Button>
                </children>
             </HBox>
+            <Button fx:id="logout" layoutX="175.0" layoutY="6.0" mnemonicParsing="false" style="-fx-background-color: #37474f; -fx-background-radius: 20;" text="Logout" textFill="#1e88e5">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+               <graphic>
+                  <ImageView accessibleRole="BUTTON" fitHeight="15.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@image/logout.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
             </children>
         </AnchorPane>
         <AnchorPane fx:id="sideBar" prefHeight="1004.0" prefWidth="227.0" style="-fx-background-color: #6200ea;">
