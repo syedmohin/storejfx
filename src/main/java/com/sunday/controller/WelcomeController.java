@@ -64,7 +64,6 @@ import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -318,7 +317,9 @@ public class WelcomeController implements Initializable {
     }
 
     private void textBinding() {
-        TextFields.bindAutoCompletion(customerFilter, List.of("CUST"));
+        var list = new ArrayList<String>(customerService.getAllCustomerNames());
+        list.add("CUST");
+        TextFields.bindAutoCompletion(customerFilter, list);
         TextFields.bindAutoCompletion(customerName, customerService.getAllCustomerNames());
         TextFields.bindAutoCompletion(vehicleNoStock, stockService.getAllvehicle());
     }
