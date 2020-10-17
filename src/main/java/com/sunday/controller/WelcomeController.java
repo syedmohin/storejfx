@@ -317,9 +317,12 @@ public class WelcomeController implements Initializable {
     }
 
     private void textBinding() {
-        var list = new ArrayList<String>(customerService.getAllCustomerNames());
+        var list = new ArrayList<>(customerService.getAllCustomerNames());
         list.add("CUST");
-        TextFields.bindAutoCompletion(customerFilter, list);
+        var l = list.stream()
+                .distinct()
+                .collect(Collectors.toList());
+        TextFields.bindAutoCompletion(customerFilter, l);
         TextFields.bindAutoCompletion(customerName, customerService.getAllCustomerNames());
         TextFields.bindAutoCompletion(vehicleNoStock, stockService.getAllvehicle());
     }
