@@ -63,7 +63,9 @@ import javax.print.PrintServiceLookup;
 import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -174,7 +176,7 @@ public class WelcomeController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         textBinding();
-        moveable();
+        movable();
         setTime();
         unpaid.setOnAction(e -> {
             directoryChooser.setTitle("Select the Folder");
@@ -569,6 +571,8 @@ public class WelcomeController implements Initializable {
         stockTable.setEditable(true);
         var stockNo = new TableColumn<StockObservable, String>("#");
         stockNo.setCellValueFactory(p -> p.getValue().stockId);
+//        stockNo.setComparator((o1, o2) -> o2.toLowerCase().compareTo(o1.toLowerCase()));
+        stockNo.setSortType(TableColumn.SortType.DESCENDING);
 
         var vehicleNo = new TableColumn<StockObservable, String>("Vehicle Number");
         vehicleNo.setCellValueFactory(p -> p.getValue().vehicleNo);
@@ -608,8 +612,14 @@ public class WelcomeController implements Initializable {
         Balance.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
         Balance.setOnEditCommit(e -> {
             var stockId = e.getTableView().getItems().get(e.getTablePosition().getRow()).stockId.get();
-            var st = stockService.updateBalance(stockId, e.getNewValue());
-            e.getTableView().getItems().get(e.getTablePosition().getRow()).Balance.set(st.getBalance());
+            if (e.getOldValue() <= e.getNewValue()) {
+                e.getTableColumn().getTableView().refresh();
+                e.getTableView().getItems().get(e.getTablePosition().getRow()).Balance.set(e.getOldValue());
+                alertMe("You have Paying more than Total Amount ");
+            } else {
+                var st = stockService.updateBalance(stockId, e.getNewValue());
+                e.getTableView().getItems().get(e.getTablePosition().getRow()).Balance.set(st.getBalance());
+            }
         });
 
         var date = new TableColumn<StockObservable, String>("Date");
@@ -618,12 +628,12 @@ public class WelcomeController implements Initializable {
         stock.forEach(s -> obStock.add(new StockObservable(s.getStockId(), s.getVehicleNo(), s.getWeight(), s.getRate(), s.getTotalAmount(), s.getBalance(), s.getDate())));
         stockTable.getColumns().addAll(stockNo, vehicleNo, weight, rate, totalAmount, Balance, date);
         stockTable.setItems(obStock);
+        stock.sort((o1, o2) -> o2.getStockId().toLowerCase().compareTo(o1.getStockId().toLowerCase()));
         addButtonToStockTable();
     }
 
     private void addButtonToStockTable() {
         var show = new TableColumn<StockObservable, Void>("");
-        show.setPrefWidth(58);
         var showCellFactory = new Callback<TableColumn<StockObservable, Void>, TableCell<StockObservable, Void>>() {
             @Override
             public TableCell<StockObservable, Void> call(TableColumn<StockObservable, Void> param) {
@@ -761,7 +771,7 @@ public class WelcomeController implements Initializable {
         }
     }
 
-    private void moveable() {
+    private void movable() {
         main.setOnMousePressed(e -> {
             xOffSet = e.getSceneX();
             yOffSet = e.getSceneY();
@@ -781,7 +791,7 @@ public class WelcomeController implements Initializable {
         var custNo = new TableColumn<CustomerObservable, String>("#");
         custNo.setCellValueFactory(p -> p.getValue().custNo);
         custNo.setSortable(true);
-        custNo.setComparator(Comparator.comparing(String::toLowerCase));
+        custNo.setComparator((o1, o2) -> o2.toLowerCase().compareTo(o1.toLowerCase()));
 
         var customerName = new TableColumn<CustomerObservable, String>("Customer Name");
         customerName.setCellValueFactory(param -> param.getValue().name);
@@ -830,9 +840,15 @@ public class WelcomeController implements Initializable {
         returnedCrate.setOnEditCommit(e -> {
             try {
                 var custId = e.getTableView().getItems().get(e.getTablePosition().getRow()).custNo.get();
-                var c = customerService.updateReturnCrate(custId, e.getNewValue());
-                var show = c.getCrate() - c.getReturnedCrate();
-                e.getTableView().getItems().get(e.getTablePosition().getRow()).returedCrate.set(show);
+                if (e.getOldValue() <= e.getNewValue()) {
+                    e.getTableColumn().getTableView().refresh();
+                    e.getTableView().getItems().get(e.getTablePosition().getRow()).returedCrate.set(e.getOldValue());
+                    alertMe("You are Entering more number than pending number");
+                } else {
+                    var c = customerService.updateReturnCrate(custId, e.getNewValue());
+                    var show = c.getCrate() - c.getReturnedCrate();
+                    e.getTableView().getItems().get(e.getTablePosition().getRow()).returedCrate.set(show);
+                }
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
@@ -846,8 +862,14 @@ public class WelcomeController implements Initializable {
         balance.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
         balance.setOnEditCommit(e -> {
             var custId = e.getTableView().getItems().get(e.getTablePosition().getRow()).custNo.get();
-            var cu = customerService.updateBalance(custId, e.getNewValue());
-            e.getTableView().getItems().get(e.getTablePosition().getRow()).balance.set(cu.getBalance());
+            if (e.getOldValue() <= e.getNewValue()) {
+                e.getTableColumn().getTableView().refresh();
+                e.getTableView().getItems().get(e.getTablePosition().getRow()).balance.set(e.getOldValue());
+                alertMe("You have Paying more than Total Amount ");
+            } else {
+                var cu = customerService.updateBalance(custId, e.getNewValue());
+                e.getTableView().getItems().get(e.getTablePosition().getRow()).balance.set(cu.getBalance());
+            }
         });
 
         var date = new TableColumn<CustomerObservable, String>("Date ");
@@ -857,6 +879,7 @@ public class WelcomeController implements Initializable {
         customerTable.setItems(ob);
         customerTable.getColumns().addAll(custNo, customerName, weight, rate, crate, returnedCrate, totalAmount, balance, date);
         customerTable.setItems(ob);
+        customerTable.sort();
         addShowButton();
         filterTable();
     }

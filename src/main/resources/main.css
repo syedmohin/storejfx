@@ -34,7 +34,7 @@
     -fx-background-color: white;
 }
 
-.table-view :odd {
+.table-view :even {
     -fx-background-color: #eeeeee;
 }
 
@@ -42,11 +42,11 @@
     -fx-background-color: white;
 }
 
-.table-row-cell :odd {
+.table-row-cell :even {
     -fx-background-color: #eeeeee;
 }
 
-.table-row-cell :selected .table-cell {
+.table-row-cell :selected > .table-cell {
     -fx-background-color: #304ffe;
     -fx-text-background-color: #00796b;
 }
@@ -85,10 +85,11 @@
 }
 
 .list-cell:pressed {
+    -fx-background-color: #00796b;
     -fx-fill: linear-gradient(to left, #9c1017, #8f0042);
 }
 
-.list-cell:hover:selected {
+.list-cell:hover:selected:focused {
     -fx-border-color: #c5cae9;
     -fx-background-color: #00796b;
 }
@@ -99,12 +100,12 @@
     -fx-background-radius: .5em;
 }
 
-.submit:hover:selected:focused {
+.submit:hover {
     -fx-background-color: red;
 }
 
-.exit:hover:selected:focused {
-    -fx-color: red;
+.exit:hover {
+    -fx-background-color: red;
 }
 
 #customerFilter {

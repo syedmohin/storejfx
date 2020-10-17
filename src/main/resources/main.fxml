@@ -14,27 +14,27 @@
     <children>
         <Pane layoutY="140.0" prefHeight="400.0" prefWidth="1080.0" style="-fx-background-color: #304ffe;">
             <children>
-                <Button fx:id="signShow" layoutX="78.0" layoutY="215.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="116.0" style="-fx-background-radius: 99; -fx-background-color: white;" text="Sign Up" textFill="#304ffe">
+                <Button fx:id="signShow" layoutX="117.0" layoutY="215.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="116.0" style="-fx-background-radius: 99; -fx-background-color: white;" text="Sign Up" textFill="#304ffe">
                     <font>
                         <Font name="System Bold" size="15.0" />
                     </font>
                 </Button>
-                <Label layoutX="33.0" layoutY="102.0" text="Don't Have Account" textFill="WHITE">
+                <Label layoutX="87.0" layoutY="102.0" text="Don't Have Account" textFill="WHITE">
                     <font>
                         <Font name="System Bold" size="20.0" />
                     </font>
                 </Label>
-                <Label layoutX="954.0" layoutY="87.0" text="Log in" textFill="WHITE">
+                <Label layoutX="865.0" layoutY="87.0" text="Log in" textFill="WHITE">
                     <font>
                         <Font name="System Bold" size="20.0" />
                     </font>
                 </Label>
-                <Button fx:id="loginShow" layoutX="933.0" layoutY="215.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="100.0" style="-fx-background-radius: 25; -fx-background-color: white;" text="Login" textFill="#304ffe">
+                <Button fx:id="loginShow" layoutX="848.0" layoutY="215.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="100.0" style="-fx-background-radius: 25; -fx-background-color: white;" text="Login" textFill="#304ffe">
                     <font>
                         <Font name="System Bold" size="15.0" />
                     </font>
                 </Button>
-                <AnchorPane fx:id="signUpPane" layoutX="32.0" layoutY="-86.0" prefHeight="575.0" prefWidth="475.0" style="-fx-background-color: white;" stylesheets="@main.css">
+                <AnchorPane fx:id="signUpPane" layoutX="66.0" layoutY="-86.0" prefHeight="575.0" prefWidth="475.0" style="-fx-background-color: white;" stylesheets="@main.css">
                     <children>
                         <Label layoutX="26.0" layoutY="38.0" text="Sign Up Account" textFill="#304ffe">
                             <font>
@@ -78,7 +78,7 @@
                         </Button>
                     </children>
                 </AnchorPane>
-                <AnchorPane fx:id="loginPane" layoutX="537.0" layoutY="-86.0" prefHeight="575.0" prefWidth="512.0" style="-fx-background-color: white;">
+                <AnchorPane fx:id="loginPane" layoutX="496.0" layoutY="-86.0" prefHeight="575.0" prefWidth="512.0" style="-fx-background-color: white;">
                     <children>
                         <Label layoutX="31.0" layoutY="43.0" prefHeight="27.0" prefWidth="116.0" text="Login App" textFill="#304ffe">
                             <font>

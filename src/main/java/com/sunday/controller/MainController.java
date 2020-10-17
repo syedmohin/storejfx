@@ -41,8 +41,6 @@ public class MainController implements Initializable {
     @Value("classpath:/image/icon.png")
     private Resource icon;
     public static Stage s;
-    @Value("classpath:/ring.mp3")
-    private Resource ring;
 
     @FXML
     private TextField sUser;
@@ -123,14 +121,6 @@ public class MainController implements Initializable {
                     try {
                         StageListener.s.close();
                         var stage = new Stage();
-                        Platform.runLater(() -> {
-                            try {
-                                AudioClip rn = new AudioClip(ring.getURI().toString());
-                                rn.play();
-                            } catch (Exception ae) {
-                                ae.printStackTrace();
-                            }
-                        });
                         var fxmlLoader = new FXMLLoader(fxml.getURL());
                         fxmlLoader.setControllerFactory(applicationContext::getBean);
                         Parent root = fxmlLoader.load();
