@@ -189,19 +189,14 @@ public class WelcomeController implements Initializable {
             if (d != null)
                 excelFileService.generateExcelOfUnpaidCustomer(d.getAbsolutePath());
         });
-        createCustomerTable();
-        createStockTable();
+        Platform.runLater(this::createCustomerTable);
+        Platform.runLater(this::createStockTable);
         bindingFields();
-        time.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.P) {
-                play();
-            }
-        });
         main.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.P) {
-                play();
-            }
+            if (e.getCode() == KeyCode.P) play();
+            else if (e.getCode() == KeyCode.S) customerFilter.requestFocus();
         });
+
         time.setOnMouseClicked(e -> play());
         exit.setOnAction(e -> {
             new FadeInDown(main).play();
@@ -306,14 +301,16 @@ public class WelcomeController implements Initializable {
     }
 
     private void play() {
-        try {
-            AudioClip rn = new AudioClip(surah.getURI().toString());
-            rn.setVolume(100);
-            rn.stop();
-            rn.play();
-        } catch (Exception e1) {
-            e1.printStackTrace();
-        }
+        Platform.runLater(() -> {
+            try {
+                AudioClip rn = new AudioClip(surah.getURI().toString());
+                rn.setVolume(100);
+                rn.stop();
+                rn.play();
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+        });
     }
 
     private void textBinding() {

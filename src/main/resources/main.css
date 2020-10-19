@@ -108,13 +108,6 @@
     -fx-background-color: red;
 }
 
-#customerFilter {
-    -fx-background-image: url('image/search.png');
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: left center;
-    -fx-border-insets: 10px;
-}
-
 .total {
     -fx-border-color: #ffffff;
     -fx-border-width: 2px;
@@ -163,4 +156,12 @@
 #main {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
+}
+.main-anchor{
+    -fx-background-radius: 25;
+    -fx-border-radius: 25;
+}
+.table-view > .table-column{
+    -fx-border-radius: 10;
+    -fx-border-color: gray;
 }

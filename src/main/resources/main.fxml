@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="690.0" prefWidth="1080.0" stylesheets="@main.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sunday.controller.MainController">
     <children>
-        <Pane layoutY="140.0" prefHeight="400.0" prefWidth="1080.0" style="-fx-background-color: #304ffe;">
+        <Pane layoutY="140.0" prefHeight="400.0" prefWidth="1080.0" style="-fx-background-color: #304ffe; -fx-background-radius: 10;">
             <children>
                 <Button fx:id="signShow" layoutX="117.0" layoutY="215.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="116.0" style="-fx-background-radius: 99; -fx-background-color: white;" text="Sign Up" textFill="#304ffe">
                     <font>
@@ -34,7 +33,7 @@
                         <Font name="System Bold" size="15.0" />
                     </font>
                 </Button>
-                <AnchorPane fx:id="signUpPane" layoutX="66.0" layoutY="-86.0" prefHeight="575.0" prefWidth="475.0" style="-fx-background-color: white;" stylesheets="@main.css">
+                <AnchorPane fx:id="signUpPane" layoutX="66.0" layoutY="-86.0" prefHeight="575.0" prefWidth="475.0" style="-fx-background-color: white; -fx-background-radius: 30;" stylesheets="@main.css">
                     <children>
                         <Label layoutX="26.0" layoutY="38.0" text="Sign Up Account" textFill="#304ffe">
                             <font>
@@ -45,6 +44,9 @@
                             <font>
                                 <Font size="14.0" />
                             </font>
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
                         </TextField>
                         <Label layoutX="25.0" layoutY="149.0" text="Enter your username" textFill="#304ffe">
                             <font>
@@ -60,11 +62,17 @@
                             <font>
                                 <Font size="14.0" />
                             </font>
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
                         </PasswordField>
                         <PasswordField fx:id="sapassword" layoutX="226.0" layoutY="302.0" prefHeight="39.0" prefWidth="205.0" promptText="Enter Password Again" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-color: #304ffe; -fx-border-radius: 20;">
                             <font>
                                 <Font size="14.0" />
                             </font>
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
                         </PasswordField>
                         <Label layoutX="25.0" layoutY="308.0" text="Enter Password Again" textFill="#304ffe">
                             <font>
@@ -78,7 +86,7 @@
                         </Button>
                     </children>
                 </AnchorPane>
-                <AnchorPane fx:id="loginPane" layoutX="496.0" layoutY="-86.0" prefHeight="575.0" prefWidth="512.0" style="-fx-background-color: white;">
+                <AnchorPane fx:id="loginPane" layoutX="496.0" layoutY="-86.0" prefHeight="575.0" prefWidth="512.0" style="-fx-background-color: white; -fx-background-radius: 10;">
                     <children>
                         <Label layoutX="31.0" layoutY="43.0" prefHeight="27.0" prefWidth="116.0" text="Login App" textFill="#304ffe">
                             <font>
@@ -90,7 +98,10 @@
                                 <Font size="18.0" />
                             </font>
                         </Label>
-                        <TextField fx:id="lusername" layoutX="261.0" layoutY="176.0" prefHeight="39.0" prefWidth="205.0" promptText="Enter your Username" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #304ffe;" />
+                        <TextField fx:id="lusername" layoutX="261.0" layoutY="176.0" prefHeight="39.0" prefWidth="205.0" promptText="Enter your Username" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #304ffe;">
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding></TextField>
                         <Label layoutX="61.0" layoutY="279.0" prefHeight="27.0" prefWidth="155.0" text="Enter your Password" textFill="#304ffe">
                             <font>
                                 <Font size="16.0" />
@@ -100,6 +111,9 @@
                             <font>
                                 <Font size="14.0" />
                             </font>
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
                         </PasswordField>
                         <Button fx:id="login" layoutX="258.0" layoutY="419.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="205.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-color: #304ffe; -fx-border-radius: 20;" text="Login" textFill="#304ffe">
                             <font>
@@ -110,18 +124,6 @@
                 </AnchorPane>
             </children>
         </Pane>
-        <Label fx:id="title" layoutX="14.0" layoutY="14.0" text="AFC Company." textFill="#304ffe87" wrapText="true">
-            <font>
-                <Font name="System Bold" size="18.0" />
-            </font>
-        </Label>
-        <Button fx:id="exit" layoutX="1042.0" layoutY="-2.0" mnemonicParsing="false" style="-fx-background-color: transparent;" wrapText="true">
-            <graphic>
-                <ImageView fitHeight="27.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@image/redexit.png" />
-               </image></ImageView>
-            </graphic>
-        </Button>
+        <Button fx:id="exit" layoutX="1042.0" layoutY="-2.0" mnemonicParsing="false" style="-fx-background-color: transparent;" wrapText="true" />
     </children>
 </AnchorPane>

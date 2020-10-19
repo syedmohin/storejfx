@@ -11,13 +11,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.media.AudioClip;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -26,6 +30,9 @@ import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import static javafx.application.Platform.exit;
+import static javafx.application.Platform.runLater;
 
 @Component
 @RequiredArgsConstructor
@@ -53,97 +60,97 @@ public class MainController implements Initializable {
     @FXML
     private Button login;
     @FXML
-    private PasswordField sapassword;
+    private PasswordField sapassword, lpassword;
     @FXML
     private Button signUp;
-    @FXML
-    private PasswordField lpassword;
     @FXML
     private AnchorPane signUpPane;
     @FXML
     private AnchorPane loginPane;
-    @FXML
-    private Button exit;
-
     private double xOffSet = 0;
     private double yOffSet = 0;
     @FXML
-    private Button loginShow;
-    @FXML
-    private Button signShow;
-    @FXML
-    private Label title;
+    private Button loginShow, signShow;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         movable();
         main.setOpacity(0);
-        title.setOpacity(1);
+        main.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ESCAPE) exit();
+        });
+        lpassword.setOnKeyPressed(e -> runLater(() -> {
+            if (e.getCode() == KeyCode.ENTER) loginAction();
+        }));
         loginPane.setVisible(true);
         signUpPane.setVisible(false);
-        exit.setOnAction(e -> Platform.exit());
         loginShow.setOnAction(e -> {
             signUpPane.setVisible(false);
-            new FadeOut(signUpPane).setSpeed(.5).play();
+            new FadeOut(signUpPane).setSpeed(.8).setDelay(Duration.seconds(25)).play();
             loginPane.setVisible(true);
-            new FadeIn(loginPane).setSpeed(.5).play();
+            new FadeIn(loginPane).setSpeed(.8).setDelay(Duration.seconds(25)).play();
         });
         signShow.setOnAction(e -> {
             signUpPane.setVisible(true);
-            new FadeIn(signUpPane).setSpeed(.5).play();
+            new FadeIn(signUpPane).setSpeed(.8).setDelay(Duration.seconds(25)).play();
             loginPane.setVisible(false);
-            new FadeOut(loginPane).setSpeed(.5).play();
+            new FadeOut(loginPane).setSpeed(.8).setDelay(Duration.seconds(25)).play();
         });
-        signUp.setOnAction(e -> {
-            if (!(sUser.getText().isEmpty() | spassword.getText().isEmpty() | sapassword.getText().isEmpty())) {
-                if (spassword.getText().equals(sapassword.getText())) {
-                    var user = userService.insertUser(sUser.getText().trim(), spassword.getText().trim());
-                    if (user.getUsername().isEmpty() | user.getUsername() == null | user.getPassword().isEmpty() | user.getPassword() == null) {
-                        Platform.runLater(() -> {
-                            alertBox("Registration Form", "Registration Failed!!");
-                        });
-                    } else {
-                        signUpPane.setVisible(false);
-                        new FadeOut(signUpPane).setSpeed(.5).play();
-                        loginPane.setVisible(true);
-                        new FadeIn(loginPane).setSpeed(.5).play();
-                    }
+        signUp.setOnAction(e -> runLater(this::signUpAction));
+        login.setOnAction(e -> runLater(this::loginAction));
+    }
+
+    private void signUpAction() {
+        if (!(sUser.getText().isEmpty() | spassword.getText().isEmpty() | sapassword.getText().isEmpty())) {
+            if (spassword.getText().equals(sapassword.getText())) {
+                var user = userService.insertUser(sUser.getText().trim(), spassword.getText().trim());
+                if (user.getUsername().isEmpty() | user.getUsername() == null | user.getPassword().isEmpty() | user.getPassword() == null) {
+                    runLater(() -> {
+                        alertBox("Registration Form", "Registration Failed!!");
+                    });
                 } else {
-                    alertBox("Registration Form", "Password must be Same in both fields");
+                    signUpPane.setVisible(false);
+                    new FadeOut(signUpPane).setSpeed(.5).play();
+                    loginPane.setVisible(true);
+                    new FadeIn(loginPane).setSpeed(.5).play();
                 }
             } else {
-                alertBox("Registration Form", "fields should not be empty");
+                alertBox("Registration Form", "Password must be Same in both fields");
             }
-        });
-        login.setOnAction(e -> {
-            if (!(lusername.getText().isEmpty() | lpassword.getText().isEmpty())) {
-                if (userService.checkUserAndPassword(lusername.getText().trim(), lpassword.getText().trim())) {
-                    try {
-                        StageListener.s.close();
-                        var stage = new Stage();
-                        var fxmlLoader = new FXMLLoader(fxml.getURL());
-                        fxmlLoader.setControllerFactory(applicationContext::getBean);
-                        Parent root = fxmlLoader.load();
-                        var scene = new Scene(root);
-                        stage.setTitle(applicationTitle);
-                        stage.centerOnScreen();
-                        stage.initStyle(StageStyle.UNDECORATED);
-                        stage.setResizable(false);
-                        stage.getIcons().add(new Image(icon.getInputStream()));
-                        stage.setScene(scene);
-                        s = stage;
-                        stage.show();
-                        new BounceIn(root).play();
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
-                    }
-                }else {
-                    alertBox("Login Form","Username and Password mismatch");
+        } else {
+            alertBox("Registration Form", "fields should not be empty");
+        }
+    }
+
+    private void loginAction() {
+        if (!(lusername.getText().isEmpty() | lpassword.getText().isEmpty())) {
+            if (userService.checkUserAndPassword(lusername.getText().trim(), lpassword.getText().trim())) {
+                try {
+                    StageListener.s.close();
+                    var stage = new Stage();
+                    var fxmlLoader = new FXMLLoader(fxml.getURL());
+                    fxmlLoader.setControllerFactory(applicationContext::getBean);
+                    Parent root = fxmlLoader.load();
+                    var scene = new Scene(root);
+                    stage.setTitle(applicationTitle);
+                    stage.centerOnScreen();
+                    stage.initStyle(StageStyle.UNDECORATED);
+                    stage.setResizable(false);
+                    stage.getIcons().add(new Image(icon.getInputStream()));
+                    stage.setScene(scene);
+                    s = stage;
+                    stage.show();
+                    new BounceIn(root).play();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
                 }
             } else {
-                alertBox("Login Form", "Must be filled ");
+                alertBox("Login Form", "Username and Password mismatch");
             }
-        });
+        } else {
+            alertBox("Login Form", "Must be filled ");
+        }
     }
 
     private void alertBox(String title, String content) {
