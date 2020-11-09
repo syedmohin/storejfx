@@ -22,7 +22,7 @@ public class JavafxApplication extends Application {
                 ac.registerBean(Parameters.class, this::getParameters);
                 ac.registerBean(HostServices.class, this::getHostServices);
             };
-
+            System.setProperty("java.awt.headless","true");
             this.context = new SpringApplicationBuilder()
                     .sources(StoreJavafxApplication.class)
                     .initializers(initializer)

@@ -20,11 +20,13 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -38,10 +40,14 @@ import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.effect.BoxBlur;
+import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
@@ -81,8 +87,8 @@ public class WelcomeController implements Initializable {
     @Value("classpath:/printerselection.fxml")
     private Resource printerList;
 
-    @Value("classpath:/001.mp3")
-    private Resource surah;
+    @Value("classpath:/user.fxml")
+    private Resource userAccountFXMl;
 
     @Value("classpath:/main.fxml")
     private Resource fxml;
@@ -171,12 +177,21 @@ public class WelcomeController implements Initializable {
     private double yOffSet = 0;
     @FXML
     private Button logout;
+    @FXML
+    private AnchorPane sideBar;
+    @FXML
+    private Button userAccount;
+    @FXML
+    private Button customerBtn;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         textBinding();
         movable();
         setTime();
+        var label = new Label("No Stock Record");
+        label.setStyle("-fx-font-weight: bold;");
+        stockTable.setPlaceholder(label);
         unpaid.setOnAction(e -> {
             directoryChooser.setTitle("Select the Folder");
             var f = new File(System.getProperty("user.home") + "/Documents/Store/Customer");
@@ -192,12 +207,33 @@ public class WelcomeController implements Initializable {
         Platform.runLater(this::createCustomerTable);
         Platform.runLater(this::createStockTable);
         bindingFields();
+        userAccount.setOnAction(e -> {
+            try {
+                var stage = new Stage();
+                var fxml = new FXMLLoader(userAccountFXMl.getURL());
+                fxml.setControllerFactory(applicationContext::getBean);
+                Parent load = fxml.load();
+                var scene = new Scene(load);
+                stage.setResizable(false);
+                stage.setTitle("User Account's");
+                stage.getIcons().add(new Image("/image/icon.png"));
+                stage.initStyle(StageStyle.TRANSPARENT);
+                scene.setOnKeyPressed(event -> {
+                    if (event.getCode() == KeyCode.ESCAPE) stage.close();
+                });
+                stage.setScene(scene);
+                stage.show();
+                new BounceIn(load).setSpeed(.8).play();
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+        });
         main.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.P) play();
-            else if (e.getCode() == KeyCode.S) customerFilter.requestFocus();
+            if (e.getCode() == KeyCode.ENTER) {
+                customerName.setFocusTraversable(true);
+            }
         });
 
-        time.setOnMouseClicked(e -> play());
         exit.setOnAction(e -> {
             new FadeInDown(main).play();
             Platform.exit();
@@ -206,6 +242,7 @@ public class WelcomeController implements Initializable {
             new FadeInDown(main).play();
             ((Stage) minus.getScene().getWindow()).setIconified(true);
         });
+        submitCustomer.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> submitCustomer.setEffect(new Glow()));
         submitCustomer.setOnAction(ae -> {
             try {
                 checkingFieldsOfCustomers();
@@ -278,7 +315,6 @@ public class WelcomeController implements Initializable {
                 scene.setOnKeyPressed(event -> {
                     if (event.getCode() == KeyCode.ESCAPE) stage.close();
                 });
-                stage.getIcons().add(new Image("image/icon.png"));
                 stage.setScene(scene);
                 stage.show();
                 new BounceIn(load).setSpeed(.8).play();
@@ -300,18 +336,6 @@ public class WelcomeController implements Initializable {
         });
     }
 
-    private void play() {
-        Platform.runLater(() -> {
-            try {
-                AudioClip rn = new AudioClip(surah.getURI().toString());
-                rn.setVolume(100);
-                rn.stop();
-                rn.play();
-            } catch (Exception e1) {
-                e1.printStackTrace();
-            }
-        });
-    }
 
     private void textBinding() {
         var list = new ArrayList<>(customerService.getAllCustomerNames());
@@ -858,17 +882,25 @@ public class WelcomeController implements Initializable {
         var totalAmount = new TableColumn<CustomerObservable, Integer>("Total Amount");
         totalAmount.setCellValueFactory(p -> p.getValue().totalAmount.asObject());
 
-        var balance = new TableColumn<CustomerObservable, Integer>("Balance");
-        balance.setCellValueFactory(p -> p.getValue().balance.asObject());
-        balance.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        var balance = new TableColumn<CustomerObservable, String>("Balance");
+        balance.setCellFactory(TextFieldTableCell.forTableColumn());
+        balance.setCellValueFactory(p -> {
+            if (p.getValue().balance.get() <= 0) {
+                balance.setStyle("-fx-font-weight: bold;");
+                return new SimpleStringProperty("Paid");
+            } else {
+                return p.getValue().balance.asString();
+            }
+
+        });
         balance.setOnEditCommit(e -> {
             var custId = e.getTableView().getItems().get(e.getTablePosition().getRow()).custNo.get();
-            if (e.getOldValue() <= e.getNewValue()) {
+            if (Integer.parseInt(e.getOldValue()) <= Integer.parseInt(e.getNewValue())) {
                 e.getTableColumn().getTableView().refresh();
-                e.getTableView().getItems().get(e.getTablePosition().getRow()).balance.set(e.getOldValue());
+                e.getTableView().getItems().get(e.getTablePosition().getRow()).balance.set(Integer.parseInt(e.getOldValue()));
                 alertMe("You have Paying more than Total Amount ");
             } else {
-                var cu = customerService.updateBalance(custId, e.getNewValue());
+                var cu = customerService.updateBalance(custId, Integer.parseInt(e.getNewValue()));
                 e.getTableView().getItems().get(e.getTablePosition().getRow()).balance.set(cu.getBalance());
             }
         });
@@ -881,6 +913,9 @@ public class WelcomeController implements Initializable {
         customerTable.getColumns().addAll(custNo, customerName, weight, rate, crate, returnedCrate, totalAmount, balance, date);
         customerTable.setItems(ob);
         customerTable.sort();
+        var label = new Label("No Customer is Available");
+        label.setPrefSize(150, 150);
+        customerTable.setPlaceholder(label);
         addShowButton();
         filterTable();
     }
@@ -941,6 +976,7 @@ public class WelcomeController implements Initializable {
 
     private void addShowButton() {
         var show = new TableColumn<CustomerObservable, Void>("");
+        show.setPrefWidth(200);
         var delete = new TableColumn<CustomerObservable, Void>("");
         var showCellFactory = new Callback<TableColumn<CustomerObservable, Void>, TableCell<CustomerObservable, Void>>() {
             @Override

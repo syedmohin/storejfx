@@ -9,6 +9,9 @@
     -fx-font-size: 20;
     -fx-alignment: CENTER;
 }
+.table-view:selected{
+    -fx-text-fill: #00796b;
+}
 
 .table-view .column-header .label {
     -fx-text-fill: #00796b;
@@ -51,6 +54,11 @@
     -fx-text-background-color: #00796b;
 }
 
+.total-row-cell :selected {
+    -fx-background-color: #304ffe;
+    -fx-text-background-color: #00796b;
+}
+
 /* scroll bar starts here */
 
 /* The increment and decrement button CSS class of scrollbar */
@@ -89,7 +97,7 @@
     -fx-fill: linear-gradient(to left, #9c1017, #8f0042);
 }
 
-.list-cell:hover:selected:focused {
+.list-cell:selected {
     -fx-border-color: #c5cae9;
     -fx-background-color: #00796b;
 }
@@ -157,11 +165,13 @@
     -fx-background-color: transparent;
     -fx-border-color: transparent;
 }
-.main-anchor{
+
+.main-anchor {
     -fx-background-radius: 25;
     -fx-border-radius: 25;
 }
-.table-view > .table-column{
+
+.table-view > .table-column {
     -fx-border-radius: 10;
     -fx-border-color: gray;
 }

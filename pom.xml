@@ -19,6 +19,7 @@
         <java.version>15</java.version>
         <javafx.plugin.version>0.0.4</javafx.plugin.version>
         <main.class>com.sunday.StoreJavafxApplication</main.class>
+        <headless>true</headless>
     </properties>
     <dependencies>
         <dependency>
@@ -102,5 +103,6 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>store</finalName>
     </build>
 </project>

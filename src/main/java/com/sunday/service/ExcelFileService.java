@@ -3,6 +3,7 @@ package com.sunday.service;
 import com.sunday.model.Customer;
 import com.sunday.model.CustomerModifiedAmount;
 import com.sunday.model.StockModifiedAmount;
+import javafx.application.Platform;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.BorderExtent;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -13,6 +14,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -72,8 +75,18 @@ public class ExcelFileService {
             sheet.autoSizeColumn(i);
         }
         pt.applyBorders(sheet);
-        try (var outputStream = new FileOutputStream(new File(dir + "\\" + LocalDate.now().toString() + "-customer.xlsx"))) {
+        var file = new File(dir + "\\" + LocalDate.now().toString() + "-customer.xlsx");
+        try (var outputStream = new FileOutputStream(file)) {
             workbook.write(outputStream);
+            SwingUtilities.invokeLater(() -> {
+                var desktop = Desktop.getDesktop();
+                try {
+                    if (desktop.isSupported(Desktop.Action.APP_OPEN_FILE))
+                        desktop.open(file);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -124,9 +137,19 @@ public class ExcelFileService {
         for (var i = 0; i <= 7; i++) {
             sheet.autoSizeColumn(i);
         }
+        var file = new File(dir + "\\" + LocalDate.now().toString() + "-stock.xlsx");
         pt.applyBorders(sheet);
-        try (var outputStream = new FileOutputStream(dir + "\\" + LocalDate.now().toString() + "-stock.xlsx")) {
+        try (var outputStream = new FileOutputStream(file)) {
             workbook.write(outputStream);
+            SwingUtilities.invokeLater(() -> {
+                var desktop = Desktop.getDesktop();
+                try {
+                    if (desktop.isSupported(Desktop.Action.APP_OPEN_FILE))
+                        desktop.open(file);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -138,12 +161,12 @@ public class ExcelFileService {
         }
     }
 
-    public void generateExcelOfUnpaidCustomer(String dir){
+    public void generateExcelOfUnpaidCustomer(String dir) {
         var workbook = new XSSFWorkbook();
         var sheet = workbook.createSheet(LocalDate.now().toString());
         var customer = customerService.getAllData();
-        var customerList=customer.stream()
-                .filter(s->s.getBalance()>0)
+        var customerList = customer.stream()
+                .filter(s -> s.getBalance() > 0)
                 .collect(Collectors.toList());
         System.out.println(customerList);
 
@@ -159,9 +182,7 @@ public class ExcelFileService {
         headerRow.createCell(6).setCellValue("Rate");
         headerRow.createCell(7).setCellValue("Crate");
         headerRow.createCell(8).setCellValue("Pending Crate");
-
-        var date = headerRow.createCell(9);
-        date.setCellValue("Date");
+        headerRow.createCell(9).setCellValue("Date");
 
         var pt = new PropertyTemplate();
         pt.drawBorders(new CellRangeAddress(0, customerList.size(), 0, 9),
@@ -188,8 +209,18 @@ public class ExcelFileService {
             sheet.autoSizeColumn(i);
         }
         pt.applyBorders(sheet);
+        File file = new File(dir + "\\" + LocalDate.now().toString() + "-unpaid customer.xlsx");
         try (var outputStream = new FileOutputStream(dir + "\\" + LocalDate.now().toString() + "-unpaid customer.xlsx")) {
             workbook.write(outputStream);
+            SwingUtilities.invokeLater(() -> {
+                var desktop = Desktop.getDesktop();
+                try {
+                    if (desktop.isSupported(Desktop.Action.APP_OPEN_FILE))
+                        desktop.open(file);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

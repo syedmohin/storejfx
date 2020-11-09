@@ -5,6 +5,8 @@ import com.sunday.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
@@ -29,5 +31,31 @@ public class UserService {
         u.setUsername(user);
         u.setPassword(pass);
         return userRepository.save(u);
+    }
+
+    public List<User> getAllUserData() {
+        var itre = userRepository.findAll();
+        List<User> users = new ArrayList<>();
+        itre.forEach(users::add);
+        return users;
+    }
+
+    public User getUser(String username) {
+        try {
+            var userOp = userRepository.findByUsername(username);
+            return userOp.orElseThrow(() -> new IllegalAccessException("User Not Found"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean deleteUser(String username) {
+        if (userRepository.existsByUsername(username)) {
+            userRepository.delete(getUser(username));
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -3,6 +3,7 @@ package com.sunday.stage;
 import animatefx.animation.BounceIn;
 import animatefx.animation.FadeIn;
 import com.sun.javafx.sg.prism.NGImageView;
+import com.sunday.repository.UserRepository;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -35,7 +36,6 @@ public class StageListener implements ApplicationListener<StageReadyEvent> {
 
     @Override
     public void onApplicationEvent(StageReadyEvent stageReadyEvent) {
-
         try {
             var stage = stageReadyEvent.getStage();
             var fxmlLoader = new FXMLLoader(fxml.getURL());
