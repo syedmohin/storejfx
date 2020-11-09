@@ -74,7 +74,6 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         movable();
         main.setOpacity(0);
         main.setOnKeyPressed(e -> {
@@ -86,15 +85,15 @@ public class MainController implements Initializable {
         loginPane.setVisible(true);
         signUpPane.setVisible(false);
         loginShow.setOnAction(e -> {
-            signUpPane.setVisible(false);
-            new FadeOut(signUpPane).setSpeed(.8).setDelay(Duration.seconds(25)).play();
             loginPane.setVisible(true);
+            new FadeOut(signUpPane).setSpeed(.8).setDelay(Duration.seconds(25)).play();
+            signUpPane.setVisible(false);
             new FadeIn(loginPane).setSpeed(.8).setDelay(Duration.seconds(25)).play();
         });
         signShow.setOnAction(e -> {
-            signUpPane.setVisible(true);
-            new FadeIn(signUpPane).setSpeed(.8).setDelay(Duration.seconds(25)).play();
             loginPane.setVisible(false);
+            new FadeIn(signUpPane).setSpeed(.8).setDelay(Duration.seconds(25)).play();
+            signUpPane.setVisible(true);
             new FadeOut(loginPane).setSpeed(.8).setDelay(Duration.seconds(25)).play();
         });
         signUp.setOnAction(e -> runLater(this::signUpAction));

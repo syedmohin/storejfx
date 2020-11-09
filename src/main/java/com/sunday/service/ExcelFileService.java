@@ -3,7 +3,6 @@ package com.sunday.service;
 import com.sunday.model.Customer;
 import com.sunday.model.CustomerModifiedAmount;
 import com.sunday.model.StockModifiedAmount;
-import javafx.application.Platform;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.BorderExtent;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -11,11 +10,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.PropertyTemplate;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -78,15 +74,6 @@ public class ExcelFileService {
         var file = new File(dir + "\\" + LocalDate.now().toString() + "-customer.xlsx");
         try (var outputStream = new FileOutputStream(file)) {
             workbook.write(outputStream);
-            SwingUtilities.invokeLater(() -> {
-                var desktop = Desktop.getDesktop();
-                try {
-                    if (desktop.isSupported(Desktop.Action.APP_OPEN_FILE))
-                        desktop.open(file);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -141,15 +128,6 @@ public class ExcelFileService {
         pt.applyBorders(sheet);
         try (var outputStream = new FileOutputStream(file)) {
             workbook.write(outputStream);
-            SwingUtilities.invokeLater(() -> {
-                var desktop = Desktop.getDesktop();
-                try {
-                    if (desktop.isSupported(Desktop.Action.APP_OPEN_FILE))
-                        desktop.open(file);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -212,15 +190,6 @@ public class ExcelFileService {
         File file = new File(dir + "\\" + LocalDate.now().toString() + "-unpaid customer.xlsx");
         try (var outputStream = new FileOutputStream(dir + "\\" + LocalDate.now().toString() + "-unpaid customer.xlsx")) {
             workbook.write(outputStream);
-            SwingUtilities.invokeLater(() -> {
-                var desktop = Desktop.getDesktop();
-                try {
-                    if (desktop.isSupported(Desktop.Action.APP_OPEN_FILE))
-                        desktop.open(file);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

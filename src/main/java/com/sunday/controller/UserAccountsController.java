@@ -26,14 +26,19 @@ public class UserAccountsController implements Initializable {
     private Button exit;
     @FXML
     private Button delete;
+    @FXML
+    private Button deleteAll;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         exit.setOnAction(e -> ((Stage) exit.getScene().getWindow()).close());
         setUserList();
         delete.setOnAction(e -> {
-            String wrong = userList.getSelectionModel().getSelectedItem();
-            userService.deleteUser(wrong);
+            userService.deleteUser(userList.getSelectionModel().getSelectedItem());
+            setUserList();
+        });
+        deleteAll.setOnAction(e -> {
+            userService.deleteAll();
             setUserList();
         });
     }

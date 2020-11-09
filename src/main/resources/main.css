@@ -10,7 +10,8 @@
     -fx-alignment: CENTER;
 }
 .table-view:selected{
-    -fx-text-fill: #00796b;
+    -fx-border-color: #c5cae9;
+    -fx-background-color: #00796b;
 }
 
 .table-view .column-header .label {
@@ -26,6 +27,9 @@
     -fx-alignment: CENTER;
     -fx-background-color: #ffffff;
     -fx-border-color: #ffffff;
+    -fx-text-fill: #00796b;
+}
+.table-view .cell{
     -fx-text-fill: #00796b;
 }
 

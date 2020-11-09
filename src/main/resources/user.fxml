@@ -10,7 +10,7 @@
 <AnchorPane prefHeight="570.0" prefWidth="570.0" style="-fx-background-color: #1e88e5;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sunday.controller.UserAccountsController">
    <children>
       <ListView fx:id="userList" layoutX="34.0" layoutY="39.0" prefHeight="436.0" prefWidth="507.0" stylesheets="@main.css" AnchorPane.leftAnchor="34.0" AnchorPane.rightAnchor="29.0" AnchorPane.topAnchor="39.0" />
-      <Button fx:id="delete" layoutX="189.0" layoutY="501.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #fff; -fx-background-radius: 25;" text="Delete" textFill="RED">
+      <Button fx:id="delete" layoutX="296.0" layoutY="500.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #fff; -fx-background-radius: 25;" text="Delete" textFill="RED">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
@@ -23,6 +23,11 @@
                </image>
             </ImageView>
          </graphic>
+      </Button>
+      <Button fx:id="deleteAll" layoutX="61.0" layoutY="501.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="214.0" style="-fx-background-color: #fff; -fx-background-radius: 25;" text="Delete All" textFill="RED">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
       </Button>
    </children>
 </AnchorPane>

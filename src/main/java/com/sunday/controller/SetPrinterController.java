@@ -3,7 +3,6 @@ package com.sunday.controller;
 import com.sunday.model.Printer;
 import com.sunday.repository.PrinterRepository;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;

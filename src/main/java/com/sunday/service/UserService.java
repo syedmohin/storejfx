@@ -25,6 +25,9 @@ public class UserService {
         }, () -> login.set(false));
         return login.get();
     }
+    public void deleteAll(){
+        userRepository.deleteAll();
+    }
 
     public User insertUser(String user, String pass) {
         var u = new User();

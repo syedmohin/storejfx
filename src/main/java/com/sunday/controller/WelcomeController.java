@@ -637,7 +637,7 @@ public class WelcomeController implements Initializable {
         Balance.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
         Balance.setOnEditCommit(e -> {
             var stockId = e.getTableView().getItems().get(e.getTablePosition().getRow()).stockId.get();
-            if (e.getOldValue() <= e.getNewValue()) {
+            if (e.getOldValue() < e.getNewValue()) {
                 e.getTableColumn().getTableView().refresh();
                 e.getTableView().getItems().get(e.getTablePosition().getRow()).Balance.set(e.getOldValue());
                 alertMe("You have Paying more than Total Amount ");
@@ -895,7 +895,7 @@ public class WelcomeController implements Initializable {
         });
         balance.setOnEditCommit(e -> {
             var custId = e.getTableView().getItems().get(e.getTablePosition().getRow()).custNo.get();
-            if (Integer.parseInt(e.getOldValue()) <= Integer.parseInt(e.getNewValue())) {
+            if (Integer.parseInt(e.getOldValue()) < Integer.parseInt(e.getNewValue())) {
                 e.getTableColumn().getTableView().refresh();
                 e.getTableView().getItems().get(e.getTablePosition().getRow()).balance.set(Integer.parseInt(e.getOldValue()));
                 alertMe("You have Paying more than Total Amount ");
