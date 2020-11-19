@@ -193,9 +193,10 @@ public class ExcelFileService {
             sheet.autoSizeColumn(i);
         }
         pt.applyBorders(sheet);
-        File file = new File(dir + "\\" + LocalDate.now().toString() + "-unpaid customer.xlsx");
-        try (var outputStream = new FileOutputStream(dir + "\\" + LocalDate.now().toString() + "-unpaid customer.xlsx")) {
+        var d = dir + "\\" + LocalDate.now().toString() + "-unpaid customer.xlsx";
+        try (var outputStream = new FileOutputStream(d)) {
             workbook.write(outputStream);
+            hostServices.showDocument(d);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
