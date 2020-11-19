@@ -3,6 +3,7 @@ package com.sunday.service;
 import com.sunday.model.Customer;
 import com.sunday.model.CustomerModifiedAmount;
 import com.sunday.model.StockModifiedAmount;
+import javafx.application.HostServices;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.BorderExtent;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 public class ExcelFileService {
     private final CustomerService customerService;
     private final StockService stockService;
+    private final HostServices hostServices;
 
     public void generateExcelOfTodayCustomer(String dir) {
         var workbook = new XSSFWorkbook();
@@ -71,9 +73,11 @@ public class ExcelFileService {
             sheet.autoSizeColumn(i);
         }
         pt.applyBorders(sheet);
-        var file = new File(dir + "\\" + LocalDate.now().toString() + "-customer.xlsx");
+        var d = dir + "\\" + LocalDate.now().toString() + "-customer.xlsx";
+        var file = new File(d);
         try (var outputStream = new FileOutputStream(file)) {
             workbook.write(outputStream);
+            hostServices.showDocument(d);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -124,10 +128,12 @@ public class ExcelFileService {
         for (var i = 0; i <= 7; i++) {
             sheet.autoSizeColumn(i);
         }
-        var file = new File(dir + "\\" + LocalDate.now().toString() + "-stock.xlsx");
+        var d = dir + "\\" + LocalDate.now().toString() + "-stock.xlsx";
+        var file = new File(d);
         pt.applyBorders(sheet);
         try (var outputStream = new FileOutputStream(file)) {
             workbook.write(outputStream);
+            hostServices.showDocument(d);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
