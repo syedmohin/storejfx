@@ -128,7 +128,7 @@ public class ExcelFileService {
         for (var i = 0; i <= 7; i++) {
             sheet.autoSizeColumn(i);
         }
-        var d = dir + "\\" + LocalDate.now().toString() + "-stock.xlsx";
+        var d = dir + "\\" + LocalDate.now() + "-stock.xlsx";
         var file = new File(d);
         pt.applyBorders(sheet);
         try (var outputStream = new FileOutputStream(file)) {
@@ -193,7 +193,7 @@ public class ExcelFileService {
             sheet.autoSizeColumn(i);
         }
         pt.applyBorders(sheet);
-        var d = dir + "\\" + LocalDate.now().toString() + "-unpaid customer.xlsx";
+        var d = dir + "\\" + LocalDate.now() + "-unpaid customer.xlsx";
         try (var outputStream = new FileOutputStream(d)) {
             workbook.write(outputStream);
             hostServices.showDocument(d);

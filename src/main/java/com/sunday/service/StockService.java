@@ -45,9 +45,8 @@ public class StockService {
 
     @Transactional
     public List<Stock> getAllData() {
-        var it = stockRepository.findAll();
-        List<Stock> list = new ArrayList<>();
-        it.forEach(list::add);
+        var list = new ArrayList<Stock>();
+        stockRepository.findAll().forEach(list::add);
         return list;
     }
 

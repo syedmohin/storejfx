@@ -189,19 +189,7 @@
         </AnchorPane>
         <AnchorPane layoutX="60.0" prefHeight="42.0" prefWidth="1526.0" style="-fx-background-color: #ffffff;" stylesheets="@main.css">
             <children>
-                <Button fx:id="printer" layoutX="1487.0" layoutY="6.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="97.0" style="-fx-background-color: #37474f; -fx-background-radius: 20;" stylesheets="@main.css" text="Set Printer" textFill="#1e88e5">
-                    <font>
-                        <Font name="System Bold" size="12.0" />
-                    </font>
-               <graphic>
-                  <ImageView fitHeight="17.0" fitWidth="13.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@image/setprint.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-                </Button>
-                <Label fx:id="time" layoutX="306.0" layoutY="9.0" prefHeight="25.0" prefWidth="1163.0" textFill="#00a6ff" wrapText="true">
+                <Label fx:id="time" layoutX="332.0" layoutY="9.0" prefHeight="25.0" prefWidth="1163.0" textFill="#00a6ff" wrapText="true">
                     <font>
                         <Font name="System Bold" size="16.0" />
                     </font>
@@ -240,7 +228,7 @@
                       </Button>
                </children>
             </HBox>
-            <Button fx:id="logout" layoutX="175.0" layoutY="6.0" mnemonicParsing="false" style="-fx-background-color: #37474f; -fx-background-radius: 20;" text="Logout" textFill="#1e88e5">
+            <Button fx:id="logout" layoutX="1498.0" layoutY="6.0" mnemonicParsing="false" style="-fx-background-color: #37474f; -fx-background-radius: 20;" text="Logout" textFill="#1e88e5">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -251,6 +239,11 @@
                      </image>
                   </ImageView>
                </graphic>
+            </Button>
+            <Button fx:id="name" layoutX="174.0" layoutY="7.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="118.0" style="-fx-background-color: #37474f;" textFill="#1e88e5" wrapText="true">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
             </Button>
             </children>
          <effect>

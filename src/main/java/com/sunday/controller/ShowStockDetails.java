@@ -1,7 +1,6 @@
 package com.sunday.controller;
 
 import com.sunday.model.Stock;
-import com.sunday.repository.PrinterRepository;
 import com.sunday.service.PrinterService;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -11,8 +10,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.print.PageOrientation;
-import javafx.print.Paper;
 import javafx.print.Printer;
 import javafx.print.PrinterJob;
 import javafx.scene.control.Button;
@@ -29,12 +26,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import static javafx.print.PageOrientation.PORTRAIT;
+import static javafx.print.Paper.A4;
+import static javafx.print.Printer.MarginType.DEFAULT;
+
 @Component
 @RequiredArgsConstructor
 public class ShowStockDetails implements Initializable {
 
     private final PrinterService printerService;
-    private final PrinterRepository printerRepository;
 
 
     @FXML
@@ -86,30 +86,15 @@ public class ShowStockDetails implements Initializable {
         print.setOnAction(e -> {
             var stockData = printerService.printStock(stock);
             var job = PrinterJob.createPrinterJob();
-            var p = Printer.getAllPrinters();
-            Printer selectedPrinter = null;
-            var a4 = Paper.A4;
-            for (Printer pt : p) {
-                if (pt.getName().equals(getPrinterFromDB())) {
-                    selectedPrinter = pt;
-                    selectedPrinter.createPageLayout(a4, PageOrientation.PORTRAIT, Printer.MarginType.HARDWARE_MINIMUM);
-                }
-            }
-            job.setPrinter(selectedPrinter);
-            var wv = new WebView();
-            var we = wv.getEngine();
+            var printer = Printer.defaultPrinterProperty().get();
+            printer.createPageLayout(A4, PORTRAIT, DEFAULT);
+            job.setPrinter(printer);
+            var we = new WebView().getEngine();
             we.loadContent(stockData);
             we.print(job);
             job.endJob();
         });
 
-    }
-
-    private String getPrinterFromDB() {
-        var list = new ArrayList<com.sunday.model.Printer>();
-        var it = printerRepository.findAll();
-        it.forEach(list::add);
-        return list.get(0).getPrinterName();
     }
 
     private static class StockModifiedAmountObservable {

@@ -71,6 +71,10 @@ public class MainController implements Initializable {
     private double yOffSet = 0;
     @FXML
     private Button loginShow, signShow;
+    @FXML
+    private Button exit;
+    @FXML
+    private PasswordField pin;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -102,20 +106,22 @@ public class MainController implements Initializable {
 
     private void signUpAction() {
         if (!(sUser.getText().isEmpty() | spassword.getText().isEmpty() | sapassword.getText().isEmpty())) {
-            if (spassword.getText().equals(sapassword.getText())) {
-                var user = userService.insertUser(sUser.getText().trim(), spassword.getText().trim());
-                if (user.getUsername().isEmpty() | user.getUsername() == null | user.getPassword().isEmpty() | user.getPassword() == null) {
-                    runLater(() -> {
-                        alertBox("Registration Form", "Registration Failed!!");
-                    });
+            if (!pin.getText().isEmpty()) {
+                if (spassword.getText().equals(sapassword.getText()) && pin.getText().equals("9059085684")) {
+                    var user = userService.insertUser(sUser.getText().trim(), spassword.getText().trim());
+                    if (user.getUsername().isEmpty() | user.getUsername() == null | user.getPassword().isEmpty() | user.getPassword() == null) {
+                        runLater(() -> alertBox("Registration Form", "Registration Failed!!"));
+                    } else {
+                        signUpPane.setVisible(false);
+                        new FadeOut(signUpPane).setSpeed(.5).play();
+                        loginPane.setVisible(true);
+                        new FadeIn(loginPane).setSpeed(.5).play();
+                    }
                 } else {
-                    signUpPane.setVisible(false);
-                    new FadeOut(signUpPane).setSpeed(.5).play();
-                    loginPane.setVisible(true);
-                    new FadeIn(loginPane).setSpeed(.5).play();
+                    alertBox("Registration Form", "Password must be Same in both fields");
                 }
             } else {
-                alertBox("Registration Form", "Password must be Same in both fields");
+                alertBox("Registration Form", "Enter PIN");
             }
         } else {
             alertBox("Registration Form", "fields should not be empty");
@@ -126,6 +132,7 @@ public class MainController implements Initializable {
         if (!(lusername.getText().isEmpty() | lpassword.getText().isEmpty())) {
             if (userService.checkUserAndPassword(lusername.getText().trim(), lpassword.getText().trim())) {
                 try {
+                    System.setProperty("user",lusername.getText());
                     StageListener.s.close();
                     var stage = new Stage();
                     var fxmlLoader = new FXMLLoader(fxml.getURL());

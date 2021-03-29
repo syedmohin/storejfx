@@ -53,12 +53,12 @@
                                 <Font size="18.0" />
                             </font>
                         </Label>
-                        <Label layoutX="26.0" layoutY="229.0" text="Enter your Password" textFill="#304ffe">
+                        <Label layoutX="26.0" layoutY="219.0" text="Enter your Password" textFill="#304ffe">
                             <font>
                                 <Font size="18.0" />
                             </font>
                         </Label>
-                        <PasswordField fx:id="spassword" layoutX="226.0" layoutY="222.0" prefHeight="39.0" prefWidth="205.0" promptText="Enter your Password" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-color: #304ffe; -fx-border-radius: 20;">
+                        <PasswordField fx:id="spassword" layoutX="226.0" layoutY="212.0" prefHeight="39.0" prefWidth="205.0" promptText="Enter your Password" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-color: #304ffe; -fx-border-radius: 20;">
                             <font>
                                 <Font size="14.0" />
                             </font>
@@ -66,7 +66,7 @@
                         <Insets left="15.0" />
                      </padding>
                         </PasswordField>
-                        <PasswordField fx:id="sapassword" layoutX="226.0" layoutY="302.0" prefHeight="39.0" prefWidth="205.0" promptText="Enter Password Again" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-color: #304ffe; -fx-border-radius: 20;">
+                        <PasswordField fx:id="sapassword" layoutX="226.0" layoutY="293.0" prefHeight="39.0" prefWidth="205.0" promptText="Enter Password Again" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-color: #304ffe; -fx-border-radius: 20;">
                             <font>
                                 <Font size="14.0" />
                             </font>
@@ -74,7 +74,7 @@
                         <Insets left="15.0" />
                      </padding>
                         </PasswordField>
-                        <Label layoutX="25.0" layoutY="308.0" text="Enter Password Again" textFill="#304ffe">
+                        <Label layoutX="25.0" layoutY="298.0" text="Enter Password Again" textFill="#304ffe">
                             <font>
                                 <Font size="18.0" />
                             </font>
@@ -84,6 +84,19 @@
                                 <Font name="System Bold" size="16.0" />
                             </font>
                         </Button>
+                  <Label layoutX="26.0" layoutY="366.0" text="Enter Pin" textFill="#304ffe">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <PasswordField fx:id="pin" layoutX="226.0" layoutY="366.0" prefHeight="39.0" prefWidth="205.0" promptText="Enter PIN" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-color: #304ffe; -fx-border-radius: 20;">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
+                  </PasswordField>
                     </children>
                 </AnchorPane>
                 <AnchorPane fx:id="loginPane" layoutX="496.0" layoutY="-86.0" prefHeight="575.0" prefWidth="512.0" style="-fx-background-color: white; -fx-background-radius: 10;">

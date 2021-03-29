@@ -8,7 +8,6 @@ import com.sunday.model.Customer;
 import com.sunday.model.CustomerModifiedAmount;
 import com.sunday.model.Stock;
 import com.sunday.model.StockModifiedAmount;
-import com.sunday.repository.PrinterRepository;
 import com.sunday.service.CustomerService;
 import com.sunday.service.ExcelFileService;
 import com.sunday.service.PrinterService;
@@ -20,18 +19,14 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.print.PageOrientation;
-import javafx.print.Paper;
 import javafx.print.Printer;
 import javafx.print.PrinterJob;
 import javafx.scene.Parent;
@@ -46,9 +41,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
 import javafx.stage.DirectoryChooser;
@@ -64,15 +56,17 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
-import javax.print.PrintService;
-import javax.print.PrintServiceLookup;
 import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import static javafx.print.PageOrientation.PORTRAIT;
+import static javafx.print.Paper.A4;
+import static javafx.print.Printer.MarginType.DEFAULT;
+import static javafx.scene.control.Alert.AlertType.*;
+import static javafx.scene.control.ButtonType.OK;
 
 @Component
 @RequiredArgsConstructor
@@ -99,7 +93,6 @@ public class WelcomeController implements Initializable {
     private final CustomerService customerService;
     private final StockService stockService;
     private final ExcelFileService excelFileService;
-    private final PrinterRepository printerRepository;
 
 
     final DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -159,8 +152,6 @@ public class WelcomeController implements Initializable {
     private Button excelToday;
     @FXML
     private AnchorPane customerFields;
-    @FXML
-    private Button printer;
 
     @FXML
     private Button stockExport;
@@ -183,9 +174,12 @@ public class WelcomeController implements Initializable {
     private Button userAccount;
     @FXML
     private Button customerBtn;
+    @FXML
+    private Button name;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        name.setText(System.getProperty("user","Guest"));
         textBinding();
         movable();
         setTime();
@@ -272,9 +266,6 @@ public class WelcomeController implements Initializable {
             if (d != null)
                 excelFileService.generateExcelOfTodayCustomer(d.getAbsolutePath());
         });
-        var printToolTip = new Tooltip();
-        printToolTip.setText("Select the Printer ");
-        printer.setTooltip(printToolTip);
         logout.setOnAction(e -> {
             try {
                 ((Stage) logout.getScene().getWindow()).close();
@@ -295,33 +286,7 @@ public class WelcomeController implements Initializable {
                 e1.printStackTrace();
             }
         });
-        printer.setOnAction(e -> {
-            try {
-                var printServices = PrintServiceLookup.lookupPrintServices(null, null);
-                var list = Stream.of(printServices)
-                        .map(PrintService::getName)
-                        .collect(Collectors.toList());
-                var stage = new Stage();
-                final FXMLLoader fxml = new FXMLLoader(printerList.getURL());
-                fxml.setControllerFactory(applicationContext::getBean);
-                Parent load = fxml.load();
-                SetPrinterController printerController = fxml.getController();
-                printerController.setPrinterList(list);
-                var scene = new Scene(load);
-                stage.setResizable(false);
-                stage.setTitle("Select the Printer");
-                stage.getIcons().add(new Image("/image/icon.png"));
-                stage.initStyle(StageStyle.TRANSPARENT);
-                scene.setOnKeyPressed(event -> {
-                    if (event.getCode() == KeyCode.ESCAPE) stage.close();
-                });
-                stage.setScene(scene);
-                stage.show();
-                new BounceIn(load).setSpeed(.8).play();
-            } catch (Exception x) {
-                x.printStackTrace();
-            }
-        });
+
         stockExport.setOnAction(e -> {
             directoryChooser.setTitle("Select the Folder");
             var f = new File(System.getProperty("user.home") + "/Documents/Store/Stock");
@@ -375,7 +340,7 @@ public class WelcomeController implements Initializable {
     }
 
     private void alertMe(String msg) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+        Alert alert = new Alert(ERROR);
         alert.setHeaderText("Form Validation");
         alert.setContentText(msg);
         alert.setResizable(false);
@@ -550,6 +515,7 @@ public class WelcomeController implements Initializable {
                 var c = customerService.insert(customer, cma);
                 ob.add(new CustomerObservable(c.getCustomerId(), c.getCustomerName(), c.getWeight(), c.getRate(), c.getCrate(), c.getReturnedCrate(), c.getTotalAmount(), c.getBalance(), c.getDate()));
                 customerTable.setItems(ob);
+
                 printCustomer(c);
                 filterTable();
                 clearCustomerField();
@@ -565,16 +531,9 @@ public class WelcomeController implements Initializable {
             customerData = printerService.printCustomer(c);
         }
         var job = PrinterJob.createPrinterJob();
-        var p = Printer.getAllPrinters();
-        Printer selectedPrinter = null;
-        var a4 = Paper.A4;
-        for (Printer pt : p) {
-            if (pt.getName().equals(getPrinterFromDB())) {
-                selectedPrinter = pt;
-                selectedPrinter.createPageLayout(a4, PageOrientation.PORTRAIT, 0.08f, 0.08f, 0.08f, 0.08f);
-            }
-        }
-        job.setPrinter(selectedPrinter);
+        var printer = Printer.defaultPrinterProperty().get();
+        printer.createPageLayout(A4, PORTRAIT, DEFAULT);
+        job.setPrinter(printer);
         var wv = new WebView();
         var we = wv.getEngine();
         wv.setPrefWidth(80);
@@ -584,19 +543,11 @@ public class WelcomeController implements Initializable {
         job.endJob();
     }
 
-    private String getPrinterFromDB() {
-        var list = new ArrayList<com.sunday.model.Printer>();
-        var it = printerRepository.findAll();
-        it.forEach(list::add);
-        return list.get(0).getPrinterName();
-    }
-
     private void createStockTable() {
         var stock = stockService.getAllData();
         stockTable.setEditable(true);
         var stockNo = new TableColumn<StockObservable, String>("#");
         stockNo.setCellValueFactory(p -> p.getValue().stockId);
-//        stockNo.setComparator((o1, o2) -> o2.toLowerCase().compareTo(o1.toLowerCase()));
         stockNo.setSortType(TableColumn.SortType.DESCENDING);
 
         var vehicleNo = new TableColumn<StockObservable, String>("Vehicle Number");
@@ -733,17 +684,7 @@ public class WelcomeController implements Initializable {
                         var show = new ImageView(new Image("image/delete.png"));
                         btn.setGraphic(show);
                         btn.setGraphicTextGap(5);
-                        btn.setOnAction(a -> {
-                            try {
-                                var st = getTableView().getItems().get(getIndex()).stockId.getValue();
-                                if (stockService.deleteRecord(st)) {
-                                    getTableView().getItems().remove(getIndex());
-                                    alertSuccess("Record Have been Deleted with ID : " + st, Alert.AlertType.INFORMATION, "Successful");
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        });
+                        btn.setOnAction(a -> deleteDialogStock(getTableView(),getIndex()));
                     }
 
                     @Override
@@ -815,8 +756,8 @@ public class WelcomeController implements Initializable {
         customerTable.setEditable(true);
         var custNo = new TableColumn<CustomerObservable, String>("#");
         custNo.setCellValueFactory(p -> p.getValue().custNo);
+
         custNo.setSortable(true);
-        custNo.setComparator((o1, o2) -> o2.toLowerCase().compareTo(o1.toLowerCase()));
 
         var customerName = new TableColumn<CustomerObservable, String>("Customer Name");
         customerName.setCellValueFactory(param -> param.getValue().name);
@@ -868,7 +809,7 @@ public class WelcomeController implements Initializable {
                 if (e.getOldValue() <= e.getNewValue()) {
                     e.getTableColumn().getTableView().refresh();
                     e.getTableView().getItems().get(e.getTablePosition().getRow()).returedCrate.set(e.getOldValue());
-                    alertMe("You are Entering more number than pending number");
+                    alertMe("You are Entering more amount than pending amount");
                 } else {
                     var c = customerService.updateReturnCrate(custId, e.getNewValue());
                     var show = c.getCrate() - c.getReturnedCrate();
@@ -887,7 +828,7 @@ public class WelcomeController implements Initializable {
         balance.setCellValueFactory(p -> {
             if (p.getValue().balance.get() <= 0) {
                 balance.setStyle("-fx-font-weight: bold;");
-                return new SimpleStringProperty("Paid");
+                return new SimpleStringProperty("PAID");
             } else {
                 return p.getValue().balance.asString();
             }
@@ -911,8 +852,9 @@ public class WelcomeController implements Initializable {
         cust.forEach(c -> ob.add(new CustomerObservable(c.getCustomerId(), c.getCustomerName(), c.getWeight(), c.getRate(), c.getCrate(), c.getReturnedCrate(), c.getTotalAmount(), c.getBalance(), c.getDate())));
         customerTable.setItems(ob);
         customerTable.getColumns().addAll(custNo, customerName, weight, rate, crate, returnedCrate, totalAmount, balance, date);
+
         customerTable.setItems(ob);
-        customerTable.sort();
+
         var label = new Label("No Customer is Available");
         label.setPrefSize(150, 150);
         customerTable.setPlaceholder(label);
@@ -958,20 +900,6 @@ public class WelcomeController implements Initializable {
             this.date = new SimpleStringProperty(date.toString());
         }
 
-        @Override
-        public String toString() {
-            return "CustomerObservable{" +
-                    "custNo=" + custNo +
-                    ", name=" + name +
-                    ", weight=" + weight +
-                    ", rate=" + rate +
-                    ", crate=" + crate +
-                    ", returedCrate=" + returedCrate +
-                    ", totalAmount=" + totalAmount +
-                    ", balance=" + balance +
-                    ", date=" + date +
-                    '}';
-        }
     }
 
     private void addShowButton() {
@@ -1051,18 +979,7 @@ public class WelcomeController implements Initializable {
                         var show = new ImageView(new Image("image/delete.png"));
                         btn.setGraphic(show);
                         btn.setGraphicTextGap(5);
-                        btn.setOnAction(a -> {
-                            var customerId = getTableView().getItems().get(getIndex()).custNo.getValue();
-                            if (customerService.deleteRecord(customerId)) {
-                                customerTable.setItems(ob);
-                                ob.remove(getTableView().getItems().get(getIndex()));
-                                customerTable.setItems(ob);
-                                filterTable();
-                                alertSuccess("Record Have been Deleted with ID : " + customerId, Alert.AlertType.INFORMATION, "Successful");
-                            } else {
-                                alertSuccess("Unable to Delete ID with : " + customerId, Alert.AlertType.ERROR, "Failed");
-                            }
-                        });
+                        btn.setOnAction(a -> deleteDialogCustomer(getTableView(), getIndex()));
                     }
 
                     @Override
@@ -1079,6 +996,56 @@ public class WelcomeController implements Initializable {
         };
         delete.setCellFactory(deleteCellFactory);
         customerTable.getColumns().addAll(delete, show);
+    }
+
+    private void deleteDialogStock(TableView<StockObservable> tableView, int index) {
+        var alert = new Alert(CONFIRMATION);
+        alert.setTitle("Confirmation Dialog");
+        alert.setHeaderText("Delete Karna hai ya nai");
+        alert.setContentText("aakri bar soch lo?");
+        alert.initOwner(MainController.s);
+        var boxBlur = new BoxBlur(4, 4, 3);
+        alert.setOnShowing(e -> main.setEffect(boxBlur));
+        alert.setOnCloseRequest(e -> main.setEffect(null));
+        var result = alert.showAndWait();
+        if (result.get() == OK) {
+            try {
+                var st = tableView.getItems().get(index).stockId.getValue();
+                if (stockService.deleteRecord(st)) {
+                    stockTable.setItems(obStock);
+                    tableView.getItems().remove(index);
+                    alertSuccess("Record Have been Deleted with ID : " + st, INFORMATION, "Successful");
+                    stockTable.setItems(obStock);
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void deleteDialogCustomer(TableView<CustomerObservable> tableView, int index) {
+        var alert = new Alert(CONFIRMATION);
+        alert.setTitle("Confirmation Dialog");
+        alert.setHeaderText("Delete Karna hai ya nai");
+        alert.setContentText("aakri bar soch lo?");
+        alert.initOwner(MainController.s);
+        var boxBlur = new BoxBlur(4, 4, 3);
+        alert.setOnShowing(e -> main.setEffect(boxBlur));
+        alert.setOnCloseRequest(e -> main.setEffect(null));
+        var result = alert.showAndWait();
+        if (result.get() == OK) {
+            var customerId = tableView.getItems().get(index).custNo.getValue();
+            if (customerService.deleteRecord(customerId)) {
+                customerTable.setItems(ob);
+                ob.remove(tableView.getItems().get(index));
+                customerTable.setItems(ob);
+                filterTable();
+                alertSuccess("Record Have been Deleted with ID : " + customerId, INFORMATION, "Successful");
+            } else {
+                alertSuccess("Unable to Delete ID with : " + customerId, ERROR, "Failed");
+            }
+        }
     }
 
     private void clearCustomerField() {

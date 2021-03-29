@@ -9,7 +9,8 @@
     -fx-font-size: 20;
     -fx-alignment: CENTER;
 }
-.table-view:selected{
+
+.table-view:selected {
     -fx-border-color: #c5cae9;
     -fx-background-color: #00796b;
 }
@@ -29,7 +30,8 @@
     -fx-border-color: #ffffff;
     -fx-text-fill: #00796b;
 }
-.table-view .cell{
+
+.table-view .cell {
     -fx-text-fill: #00796b;
 }
 

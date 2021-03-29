@@ -16,6 +16,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+import static javafx.collections.FXCollections.observableArrayList;
+
 @Component
 @RequiredArgsConstructor
 public class UserAccountsController implements Initializable {
@@ -48,7 +50,7 @@ public class UserAccountsController implements Initializable {
                 .stream()
                 .map(User::getUsername)
                 .collect(Collectors.toList());
-        ObservableList<String> ob = FXCollections.observableArrayList();
+        ObservableList<String> ob = observableArrayList();
         ob.addAll(list);
         userList.setItems(ob);
     }

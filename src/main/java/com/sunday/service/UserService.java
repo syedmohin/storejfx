@@ -37,9 +37,8 @@ public class UserService {
     }
 
     public List<User> getAllUserData() {
-        var itre = userRepository.findAll();
-        List<User> users = new ArrayList<>();
-        itre.forEach(users::add);
+        var users = new ArrayList<User>();
+        userRepository.findAll().forEach(users::add);
         return users;
     }
 

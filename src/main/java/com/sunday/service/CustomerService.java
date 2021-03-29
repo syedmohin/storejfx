@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -21,9 +22,8 @@ public class CustomerService {
 
     @Transactional
     public List<Customer> getAllData() {
-        var itre = customerRepository.findAll();
-        List<Customer> list = new ArrayList<>();
-        itre.forEach(list::add);
+        var list = new ArrayList<Customer>();
+        customerRepository.findAll().forEach(list::add);
         return list;
     }
 

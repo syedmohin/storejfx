@@ -1,10 +1,7 @@
 package com.sunday.controller;
 
-import com.sun.javafx.print.PrintHelper;
-import com.sun.javafx.print.Units;
 import com.sunday.model.Customer;
 import com.sunday.model.CustomerModifiedAmount;
-import com.sunday.repository.PrinterRepository;
 import com.sunday.service.PrinterService;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -14,8 +11,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.print.PageOrientation;
-import javafx.print.Paper;
 import javafx.print.Printer;
 import javafx.print.PrinterJob;
 import javafx.scene.control.Button;
@@ -29,14 +24,16 @@ import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
+
+import static javafx.print.PageOrientation.PORTRAIT;
+import static javafx.print.Paper.A4;
+import static javafx.print.Printer.MarginType.DEFAULT;
 
 @Component
 @RequiredArgsConstructor
 public class ShowCustomerDetails implements Initializable {
     private final PrinterService printerService;
-    private final PrinterRepository printerRepository;
 
     @FXML
     private Label customerName;
@@ -110,30 +107,16 @@ public class ShowCustomerDetails implements Initializable {
                 customerData = printerService.printCustomer(c);
             }
             var job = PrinterJob.createPrinterJob();
-            var p = Printer.getAllPrinters();
-            Printer selectedPrinter = null;
-            Paper paper = PrintHelper.createPaper("AFC", 80, 1000, Units.MM);
-            for (Printer pt : p) {
-                if (pt.getName().equals(getPrinterFromDB())) {
-                    selectedPrinter = pt;
-                    selectedPrinter.createPageLayout(paper, PageOrientation.PORTRAIT, 0.08f, 0.08f, 0.08f, 0.08f);
-                }
-            }
-            job.setPrinter(selectedPrinter);
-            var wv = new WebView();
-            var we = wv.getEngine();
+            var printer = Printer.defaultPrinterProperty().get();
+            printer.createPageLayout(A4, PORTRAIT, DEFAULT);
+            job.setPrinter(printer);
+            var we = new WebView().getEngine();
             we.loadContent(customerData);
             we.print(job);
             job.endJob();
         });
     }
 
-    private String getPrinterFromDB() {
-        var list = new ArrayList<com.sunday.model.Printer>();
-        var it = printerRepository.findAll();
-        it.forEach(list::add);
-        return list.get(0).getPrinterName();
-    }
 
     private static class CustomerModifiedObservable {
         final IntegerProperty paid;

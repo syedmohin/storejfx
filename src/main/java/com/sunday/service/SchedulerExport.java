@@ -71,7 +71,7 @@ public class SchedulerExport {
             sheet.autoSizeColumn(i);
         }
         pt.applyBorders(sheet);
-        try (var outputStream = new FileOutputStream(dir + "\\" + LocalDate.now().toString() + " customer-export.xlsx")) {
+        try (var outputStream = new FileOutputStream(dir + "\\" + LocalDate.now() + " customer-export.xlsx")) {
             workbook.write(outputStream);
         } catch (IOException e) {
             e.printStackTrace();
@@ -125,7 +125,7 @@ public class SchedulerExport {
             sheet.autoSizeColumn(i);
         }
         pt.applyBorders(sheet);
-        try (var outputStream = new FileOutputStream(dir + "\\" + LocalDate.now().toString() + " export-stock.xlsx")) {
+        try (var outputStream = new FileOutputStream(dir + "\\" + LocalDate.now() + " export-stock.xlsx")) {
             workbook.write(outputStream);
         } catch (IOException e) {
             e.printStackTrace();
