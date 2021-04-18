@@ -27,6 +27,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.print.Paper;
 import javafx.print.Printer;
 import javafx.print.PrinterJob;
 import javafx.scene.Parent;
@@ -59,6 +60,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -78,8 +80,6 @@ public class WelcomeController implements Initializable {
     @Value("classpath:/showstockdetails.fxml")
     private Resource showstockdetails;
 
-    @Value("classpath:/printerselection.fxml")
-    private Resource printerList;
 
     @Value("classpath:/user.fxml")
     private Resource userAccountFXMl;
@@ -176,10 +176,13 @@ public class WelcomeController implements Initializable {
     private Button customerBtn;
     @FXML
     private Button name;
+    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    @FXML
+    private Button deletebybalance;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        name.setText(System.getProperty("user","Guest"));
+        name.setText(System.getProperty("user", "Guest"));
         textBinding();
         movable();
         setTime();
@@ -298,6 +301,13 @@ public class WelcomeController implements Initializable {
             var d = directoryChooser.showDialog(excelToday.getScene().getWindow());
             if (d != null)
                 excelFileService.generateExcelOfTodayStock(d.getAbsolutePath());
+        });
+        this.deletebybalance.setOnAction(e -> {
+            customerService.deleteByBalance(0);
+            var cust = customerService.getAllData();
+            ob.clear();
+            cust.forEach(c -> ob.add(new CustomerObservable(c.getCustomerId(), c.getCustomerName(), c.getWeight(), c.getRate(), c.getCrate(), c.getReturnedCrate(), c.getTotalAmount(), c.getBalance(), c.getDate())));
+            customerTable.setItems(ob);
         });
     }
 
@@ -532,7 +542,7 @@ public class WelcomeController implements Initializable {
         }
         var job = PrinterJob.createPrinterJob();
         var printer = Printer.defaultPrinterProperty().get();
-        printer.createPageLayout(A4, PORTRAIT, DEFAULT);
+        printer.createPageLayout(Paper.A6, PORTRAIT, Printer.MarginType.HARDWARE_MINIMUM);
         job.setPrinter(printer);
         var wv = new WebView();
         var we = wv.getEngine();
@@ -684,7 +694,7 @@ public class WelcomeController implements Initializable {
                         var show = new ImageView(new Image("image/delete.png"));
                         btn.setGraphic(show);
                         btn.setGraphicTextGap(5);
-                        btn.setOnAction(a -> deleteDialogStock(getTableView(),getIndex()));
+                        btn.setOnAction(a -> deleteDialogStock(getTableView(), getIndex()));
                     }
 
                     @Override
@@ -718,7 +728,7 @@ public class WelcomeController implements Initializable {
             this.rate = new SimpleIntegerProperty(rate);
             this.Balance = new SimpleIntegerProperty(balance);
             this.totalAmount = new SimpleIntegerProperty(totalAmount);
-            this.date = new SimpleStringProperty(date.toString());
+            this.date = new SimpleStringProperty(date.format(formatter));
         }
     }
 
@@ -897,7 +907,7 @@ public class WelcomeController implements Initializable {
             this.returedCrate = new SimpleIntegerProperty(crate - returedCrate);
             this.totalAmount = new SimpleIntegerProperty(totalAmount);
             this.balance = new SimpleIntegerProperty(balance);
-            this.date = new SimpleStringProperty(date.toString());
+            this.date = new SimpleStringProperty(date.format(formatter));
         }
 
     }

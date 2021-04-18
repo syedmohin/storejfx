@@ -6,8 +6,13 @@ import com.sunday.model.Stock;
 import com.sunday.model.StockModifiedAmount;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
+
 @Service
 public class PrinterService {
+
+
+    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     public String printCustomer(Customer c) {
         var paid = c.getCustomerModifiedAmount()
@@ -21,11 +26,10 @@ public class PrinterService {
                            body {
                              margin: 0;
                              padding: 0;
-                             width: 303px;
                            }
                            table {
-                             padding: 5px;
-                             width: 100%%;
+                             padding: 2px;
+                             width: 55%%;
                            }
                          </style>
                        </head>
@@ -40,7 +44,7 @@ public class PrinterService {
                          <table>
                            <tr>
                              <td style="font-size: 12px">Customer Name</td>
-                             <td style="font-size: 15px; font-weight: bold">%s</td>
+                             <td style="font-size: 16px; font-weight: bold">%s</td>
                            </tr>
                            <tr>
                              <td style="font-size: 12px">Trans ID</td>
@@ -48,11 +52,11 @@ public class PrinterService {
                            </tr>
                            <tr>
                              <td style="font-size: 12px">Date</td>
-                             <td style="font-size: 15px; font-weight: bold">%s</td>
+                             <td style="font-size: 16px; font-weight: bold">%s</td>
                            </tr>
                            <tr>
                              <td style="font-size: 12px">Weigth</td>
-                             <td style="font-size: 15px; font-weight: bold">%d</td>
+                             <td style="font-size: 16px; font-weight: bold">%d</td>
                            </tr>
                            <tr>
                              <td style="font-size: 12px">Crate</td>
@@ -64,7 +68,7 @@ public class PrinterService {
                            </tr>
                            <tr>
                              <td style="font-size: 12px">Total Amount</td>
-                             <td style="font-size: 15px; font-weight: bold">%d</td>
+                             <td style="font-size: 16px; font-weight: bold">%d</td>
                            </tr>
                            <tr>
                              <td style="font-size: 12px">Paid</td>
@@ -77,7 +81,7 @@ public class PrinterService {
                          </table>
                        </body>
                      </html>
-                     """.formatted(c.getCustomerName(), c.getCustomerId(), c.getDate().toString(), c.getWeight(), c.getCrate(), (c.getCrate() - c.getReturnedCrate()), c.getTotalAmount(), paid, c.getBalance());
+                     """.formatted(c.getCustomerName(), c.getCustomerId(), c.getDate().format(formatter), c.getWeight(), c.getCrate(), (c.getCrate() - c.getReturnedCrate()), c.getTotalAmount(), paid, c.getBalance());
     }
 
     public String printStock(Stock s) {
@@ -94,11 +98,10 @@ public class PrinterService {
                                  body {
                                          margin: 0;
                                          padding: 0;
-                                         width: 303px;
                                        }
                                        table {
                                          padding: 5px;
-                                         width: 100%%;
+                                         width: 55%%;
                                        }
                                      </style>
                                    </head>
@@ -150,7 +153,7 @@ public class PrinterService {
                                            <th style="font-size: 12px">Paid Amount</th>
                                            <th style="font-size: 12px">on Date</th>
                                          </tr>
-                """.formatted(s.getVehicleNo(), s.getWeight(), s.getRate(), s.getTotalAmount(), paid, s.getDate().toString(), s.getBalance()));
+                """.formatted(s.getVehicleNo(), s.getWeight(), s.getRate(), s.getTotalAmount(), paid, s.getDate().format(formatter), s.getBalance()));
         for (StockModifiedAmount s1 : sma) {
             data.append("""
                             <tr>

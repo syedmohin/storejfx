@@ -14,4 +14,6 @@ public interface CustomerRepository extends CrudRepository<Customer, Integer> {
     boolean existsByCustomerId(String customerId);
 
     Optional<Customer> findTopByOrderByIdDesc();
+
+    void deleteByBalance(int balance);
 }

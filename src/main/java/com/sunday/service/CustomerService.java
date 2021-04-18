@@ -157,6 +157,11 @@ public class CustomerService {
     }
 
     @Transactional
+    public void deleteByBalance(int balance){
+        customerRepository.deleteByBalance(balance);
+    }
+
+    @Transactional
     public boolean deleteRecord(String customerId) {
         if (customerRepository.existsByCustomerId(customerId)) {
             customerRepository.deleteByCustomerId(customerId);

@@ -1,5 +1,6 @@
 package com.sunday.controller;
 
+import com.sun.javafx.print.Units;
 import com.sunday.model.Stock;
 import com.sunday.service.PrinterService;
 import javafx.beans.property.IntegerProperty;
@@ -10,6 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.print.Paper;
 import javafx.print.Printer;
 import javafx.print.PrinterJob;
 import javafx.scene.control.Button;
@@ -21,13 +23,16 @@ import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import javax.print.*;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import static javafx.print.PageOrientation.PORTRAIT;
 import static javafx.print.Paper.A4;
+import static javafx.print.Paper.MONARCH_ENVELOPE;
 import static javafx.print.Printer.MarginType.DEFAULT;
 
 @Component
@@ -55,7 +60,7 @@ public class ShowStockDetails implements Initializable {
     private Button exit;
     @FXML
     private Button print;
-
+    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         exit.setOnAction(e -> ((Stage) exit.getScene().getWindow()).close());
@@ -87,7 +92,7 @@ public class ShowStockDetails implements Initializable {
             var stockData = printerService.printStock(stock);
             var job = PrinterJob.createPrinterJob();
             var printer = Printer.defaultPrinterProperty().get();
-            printer.createPageLayout(A4, PORTRAIT, DEFAULT);
+            printer.createPageLayout(Paper.A6, PORTRAIT, Printer.MarginType.HARDWARE_MINIMUM);
             job.setPrinter(printer);
             var we = new WebView().getEngine();
             we.loadContent(stockData);
@@ -103,7 +108,7 @@ public class ShowStockDetails implements Initializable {
 
         public StockModifiedAmountObservable(Integer paid, LocalDate date) {
             this.paid = new SimpleIntegerProperty(paid);
-            this.date = new SimpleStringProperty(date.toString());
+            this.date = new SimpleStringProperty(date.format(formatter));
         }
     }
 }
